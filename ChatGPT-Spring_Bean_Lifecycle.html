@@ -1,0 +1,2108 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="https://chat.openai.com/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spring Bean Lifecycle</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll()
+    </script>
+
+    <style>
+        :root {
+            --page-text: #0d0d0d;
+            --page-bg: #fff;
+            --td-borders: #374151;
+            --th-borders: #4b5563;
+            --tw-prose-code: var(--page-text);
+            --tw-prose-counters: #9b9b9b;
+            --tw-prose-headings: var(--page-text);
+            --tw-prose-hr: rgba(0,0,0,.25);
+            --tw-prose-links: var(--page-text);
+            --tw-prose-quotes: var(--page-text);
+            --meta-title: #616c77;
+        }
+
+        [data-theme="dark"] {
+            --page-text: #ececec;
+            --page-bg: #212121;
+            --tw-prose-code: var(--page-text);
+            --tw-prose-counters: #9b9b9b;
+            --tw-prose-headings: var(--page-text);
+            --tw-prose-hr: hsla(0,0%,100%,.25);
+            --tw-prose-links: var(--page-text);
+            --tw-prose-quotes: var(--page-text);
+            --meta-title: #959faa;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        ::-webkit-scrollbar {
+            height: 1rem;
+            width: .5rem
+        }
+
+        ::-webkit-scrollbar:horizontal {
+            height: .5rem;
+            width: 1rem
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: transparent;
+            border-radius: 9999px
+        }
+
+        ::-webkit-scrollbar-thumb {
+            --tw-border-opacity: 1;
+            background-color: rgba(217,217,227,.8);
+            border-color: rgba(255,255,255,var(--tw-border-opacity));
+            border-radius: 9999px;
+            border-width: 1px
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            --tw-bg-opacity: 1;
+            background-color: rgba(236,236,241,var(--tw-bg-opacity))
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            --tw-bg-opacity: 1;
+            background-color: rgba(86,88,105,var(--tw-bg-opacity))
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            --tw-bg-opacity: 1;
+            background-color: rgba(172,172,190,var(--tw-bg-opacity))
+        }
+
+        @media (min-width: 768px) {
+            .scrollbar-trigger ::-webkit-scrollbar-thumb {
+                visibility:hidden
+            }
+
+            .scrollbar-trigger:hover ::-webkit-scrollbar-thumb {
+                visibility: visible
+            }
+        }
+
+        body {
+            font-family: Söhne,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,Helvetica Neue,Arial,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--page-text);
+            background-color: var(--page-bg);
+            margin: 0;
+            padding: 0;
+        }
+
+        [data-theme="light"] .sun {
+            display: none;
+        }
+
+        [data-theme="dark"] .moon {
+            display: none;
+        }
+
+        .toggle {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+        }
+
+        .metadata_container {
+            display: flex;
+            flex-direction: column;
+            margin-top: 8px;
+            padding-left: 1rem;
+        }
+
+        .metadata_item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            border-radius: 16px;
+            padding: 4px 0.5rem;
+        }
+
+        .metadata_item:hover {
+            background-color: rgba(0,0,0,.1);
+        }
+
+        .metadata_item > div:first-child {
+            flex: 0 1 100px;
+            color: var(--meta-title);
+        }
+
+        .metadata_item > div:last-child {
+            flex: 1;
+        }
+
+        a {
+            color: var(--tw-prose-links);
+            font-size: 0.8rem;
+            text-decoration-line: underline;
+            text-underline-offset: 2px;
+        }
+
+        .conversation-content > p:first-child,
+        ol:first-child {
+            margin-top: 0;
+        }
+
+        p>code, li>code {
+            color: var(--tw-prose-code);
+            font-weight: 600;
+            font-size: .875em;
+        }
+
+        p>code::before,
+        p>code::after,
+        li>code::before,
+        li>code::after {
+            content: "`";
+        }
+
+        hr {
+            width: 100%;
+            height: 0;
+            border: 1px solid var(--tw-prose-hr);
+            margin-bottom: 1em;
+            margin-top: 1em;
+        }
+
+        pre {
+            color: #ffffff;
+            background-color: #000000;
+            overflow-x: auto;
+            margin: 0 0 1rem 0;
+            border-radius: 0.375rem;
+        }
+
+        pre>code {
+            font-family: Söhne Mono, Monaco, Andale Mono, Ubuntu Mono, monospace !important;
+            font-weight: 400;
+            font-size: .875em;
+            line-height: 1.7142857;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--tw-prose-headings);
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 2.25em;
+            font-weight: 600;
+            line-height: 1.1111111;
+            margin-bottom: 0.8888889em;
+            margin-top: 0;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            font-weight: 700;
+            line-height: 1.3333333;
+            margin-bottom: 1em;
+            margin-top: 2em;
+        }
+
+        h3 {
+            font-size: 1.25em;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: .6em;
+            margin-top: 1.6em;
+        }
+
+        h4 {
+            font-weight: 400;
+            line-height: 1.5;
+            margin-bottom: .5em;
+            margin-top: 1.5em
+        }
+
+        h3,h4 {
+            margin-bottom: .5rem;
+            margin-top: 1rem;
+        }
+
+        h5 {
+            font-weight: 600;
+        }
+
+        blockquote {
+            border-left: 2px solid rgba(142,142,160,1);
+            color: var(--tw-prose-quotes);
+            font-style: italic;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 1rem;
+            margin: 1.6em 0;
+            padding-left: 1em;
+            quotes: "\201C""\201D""\2018""\2019";
+        }
+
+        blockquote p:first-of-type:before {
+            content: open-quote;
+        }
+
+        blockquote p:last-of-type:after {
+            content: close-quote;
+        }
+
+        ol, ul {
+            padding-left: 1.1rem;
+        }
+
+        ::marker {
+            color: var(--tw-prose-counters);
+            font-weight: 400;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0;
+            table-layout: auto;
+            text-align: left;
+            font-size: .875em;
+            line-height: 1.7142857;
+        }
+
+        table * {
+            box-sizing: border-box;
+            border-width: 0;
+            border-style: solid;
+            border-color: #d9d9e3;
+        }
+
+        table thead {
+            border-bottom-color: var(--th-borders);
+            border-bottom-width: 1px;
+        }
+
+        table th {
+            background-color: rgba(236,236,241,.2);
+            border-bottom-width: 1px;
+            border-left-width: 1px;
+            border-top-width: 1px;
+            padding: 0.25rem 0.75rem;
+        }
+
+        table th:first-child {
+            border-top-left-radius: 0.375rem;
+        }
+
+        table th:last-child {
+            border-right-width: 1px;
+            border-top-right-radius: 0.375rem;
+        }
+
+        table tbody tr {
+            border-bottom-color: var(--td-borders);
+            border-bottom-width: 1px;
+        }
+
+        table tbody tr:last-child {
+            border-bottom-width: 0;
+        }
+
+        table tbody tr:last-child td:first-child {
+            border-bottom-left-radius: 0.375rem;
+        }
+
+        table tbody tr:last-child td:last-child {
+            border-bottom-right-radius: 0.375rem;
+        }
+
+        table td {
+            border-bottom-width: 1px;
+            border-left-width: 1px;
+            padding: 0.25rem 0.75rem;
+        }
+
+        table td:last-child {
+            border-right-width: 1px;
+        }
+
+        [type=checkbox], [type=radio] {
+            accent-color: #2563eb;
+        }
+
+        .conversation {
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        @media (min-width: 1280px) {
+            .conversation {
+                max-width: 48rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .conversation {
+                max-width: 40rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .conversation {
+                max-width: 48rem;
+            }
+        }
+
+        .conversation-header {
+            margin-bottom: 1rem;
+        }
+
+        .conversation-header h1 {
+            margin: 0;
+        }
+
+        .conversation-header h1 a {
+            font-size: 1.5rem;
+        }
+
+        .conversation-header .conversation-export {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .conversation-header p {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .conversation-item {
+            display: flex;
+            position: relative;
+            padding: 1rem;
+            border-left: 1px solid rgba(0,0,0,.1);
+            border-right: 1px solid rgba(0,0,0,.1);
+            border-bottom: 1px solid rgba(0,0,0,.1);
+        }
+
+        .conversation-item:first-of-type {
+            border-top: 1px solid rgba(0,0,0,.1);
+        }
+
+        .author {
+            display: flex;
+            flex: 0 0 30px;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 0.125rem;
+            margin-right: 1rem;
+            overflow: hidden;
+        }
+
+        .author svg {
+            color: #fff;
+            width: 22px;
+            height: 22px;
+        }
+
+        .author img {
+            content: url(data:image/png;base64,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);
+            width: 100%;
+            height: 100%;
+        }
+
+        .author.GPT-3 {
+            background-color: rgb(16, 163, 127);
+        }
+
+        .author.GPT-4 {
+            background-color: black;
+        }
+
+        .conversation-content-wrapper {
+            display: flex;
+            position: relative;
+            overflow: hidden;
+            flex: 1 1 auto;
+            flex-direction: column;
+        }
+
+        .conversation-content {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .conversation-content p {
+            white-space: pre-wrap;
+            line-height: 28px;
+        }
+
+        .conversation-content img, .conversation-content video {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 2em;
+            margin-top: 2em;
+        }
+
+        .time {
+            position: absolute;
+            right: 8px;
+            bottom: 0;
+            font-size: 0.8rem;
+            color: #acacbe
+        }
+    </style>
+</head>
+
+<body>
+    <svg aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <symbol id="chatgpt" viewBox="0 0 41 41">
+            <path d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707ZM22.4978 37.8849C20.7443 37.8874 19.0459 37.2733 17.6994 36.1501C17.7601 36.117 17.8666 36.0586 17.936 36.0161L25.9004 31.4156C26.1003 31.3019 26.2663 31.137 26.3813 30.9378C26.4964 30.7386 26.5563 30.5124 26.5549 30.2825V19.0542L29.9213 20.998C29.9389 21.0068 29.9541 21.0198 29.9656 21.0359C29.977 21.052 29.9842 21.0707 29.9867 21.0902V30.3889C29.9842 32.375 29.1946 34.2791 27.7909 35.6841C26.3872 37.0892 24.4838 37.8806 22.4978 37.8849ZM6.39227 31.0064C5.51397 29.4888 5.19742 27.7107 5.49804 25.9832C5.55718 26.0187 5.66048 26.0818 5.73461 26.1244L13.699 30.7248C13.8975 30.8408 14.1233 30.902 14.3532 30.902C14.583 30.902 14.8088 30.8408 15.0073 30.7248L24.731 25.1103V28.9979C24.7321 29.0177 24.7283 29.0376 24.7199 29.0556C24.7115 29.0736 24.6988 29.0893 24.6829 29.1012L16.6317 33.7497C14.9096 34.7416 12.8643 35.0097 10.9447 34.4954C9.02506 33.9811 7.38785 32.7263 6.39227 31.0064ZM4.29707 13.6194C5.17156 12.0998 6.55279 10.9364 8.19885 10.3327C8.19885 10.4013 8.19491 10.5228 8.19491 10.6071V19.808C8.19351 20.0378 8.25334 20.2638 8.36823 20.4629C8.48312 20.6619 8.64893 20.8267 8.84863 20.9404L18.5723 26.5542L15.206 28.4979C15.1894 28.5089 15.1703 28.5155 15.1505 28.5173C15.1307 28.5191 15.1107 28.516 15.0924 28.5082L7.04046 23.8557C5.32135 22.8601 4.06716 21.2235 3.55289 19.3046C3.03862 17.3858 3.30624 15.3413 4.29707 13.6194ZM31.955 20.0556L22.2312 14.4411L25.5976 12.4981C25.6142 12.4872 25.6333 12.4805 25.6531 12.4787C25.6729 12.4769 25.6928 12.4801 25.7111 12.4879L33.7631 17.1364C34.9967 17.849 36.0017 18.8982 36.6606 20.1613C37.3194 21.4244 37.6047 22.849 37.4832 24.2684C37.3617 25.6878 36.8382 27.0432 35.9743 28.1759C35.1103 29.3086 33.9415 30.1717 32.6047 30.6641C32.6047 30.5947 32.6047 30.4733 32.6047 30.3889V21.188C32.6066 20.9586 32.5474 20.7328 32.4332 20.5338C32.319 20.3348 32.154 20.1698 31.955 20.0556ZM35.3055 15.0128C35.2464 14.9765 35.1431 14.9142 35.069 14.8717L27.1045 10.2712C26.906 10.1554 26.6803 10.0943 26.4504 10.0943C26.2206 10.0943 25.9948 10.1554 25.7963 10.2712L16.0726 15.8858V11.9982C16.0715 11.9783 16.0753 11.9585 16.0837 11.9405C16.0921 11.9225 16.1048 11.9068 16.1207 11.8949L24.1719 7.25025C25.4053 6.53903 26.8158 6.19376 28.2383 6.25482C29.6608 6.31589 31.0364 6.78077 32.2044 7.59508C33.3723 8.40939 34.2842 9.53945 34.8334 10.8531C35.3826 12.1667 35.5464 13.6095 35.3055 15.0128ZM14.2424 21.9419L10.8752 19.9981C10.8576 19.9893 10.8423 19.9763 10.8309 19.9602C10.8195 19.9441 10.8122 19.9254 10.8098 19.9058V10.6071C10.8107 9.18295 11.2173 7.78848 11.9819 6.58696C12.7466 5.38544 13.8377 4.42659 15.1275 3.82264C16.4173 3.21869 17.8524 2.99464 19.2649 3.1767C20.6775 3.35876 22.0089 3.93941 23.1034 4.85067C23.0427 4.88379 22.937 4.94215 22.8668 4.98473L14.9024 9.58517C14.7025 9.69878 14.5366 9.86356 14.4215 10.0626C14.3065 10.2616 14.2466 10.4877 14.2479 10.7175L14.2424 21.9419ZM16.071 17.9991L20.4018 15.4978L24.7325 17.9975V22.9985L20.4018 25.4983L16.071 22.9985V17.9991Z" fill="currentColor"></path>
+        </symbol>
+    </svg>
+    <div class="conversation">
+        <div class="conversation-header">
+            <h1>
+                <a href="https://chatgpt.com/c/66fbda66-09e0-8004-a331-ce7e35d5e828" target="_blank" rel="noopener noreferrer">Spring Bean Lifecycle</a>
+                <button class="toggle">
+                    <svg class="sun" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <svg class="moon" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+            </h1>
+            <div class="conversation-export">
+                <p>Exported by
+                <a href="https://github.com/pionxzh/chatgpt-exporter">ChatGPT Exporter</a>
+                at 2024-10-01T11:35:16.086Z</p>
+            </div>
+            
+        </div>
+
+        
+<div class="conversation-item">
+    <div class="author user">
+        <img alt="You" />
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>What  are beans in spring/springboot and its life cycle in detail in simple terms with code examples.</p>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="conversation-item">
+    <div class="author GPT-3">
+        <svg width="41" height="41"><use xlink:href="#chatgpt" /></svg>
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>In Spring and Spring Boot, <strong>beans</strong> are objects that are instantiated, assembled, and managed by the Spring IoC (Inversion of Control) container. A bean can be any Java object that is configured in the Spring application context.</p>
+<h3>Key Points about Beans</h3>
+<ol>
+<li><strong>Managed by Spring</strong>: Beans are created, managed, and configured by the Spring container.</li>
+<li><strong>Configuration</strong>: You can define beans using XML configuration, Java annotations, or Java configuration classes.</li>
+<li><strong>Singleton by Default</strong>: Spring beans are singleton by default, meaning that a single instance of the bean is created and shared throughout the application. You can also define beans with other scopes like prototype, request, session, etc.</li>
+</ol>
+<h3>Bean Lifecycle</h3>
+<p>The lifecycle of a Spring bean can be divided into several stages:</p>
+<ol>
+<li><strong>Instantiation</strong>: The Spring container instantiates the bean.</li>
+<li><strong>Populate Properties</strong>: Spring sets the properties of the bean (Dependency Injection).</li>
+<li><strong>Bean Name Aware</strong>: If the bean implements <code>BeanNameAware</code>, the Spring container calls <code>setBeanName()</code> method, passing the bean’s ID.</li>
+<li><strong>Bean Factory Aware</strong>: If the bean implements <code>BeanFactoryAware</code>, Spring calls <code>setBeanFactory()</code> to provide the <code>BeanFactory</code> that created it.</li>
+<li><strong>Application Context Aware</strong>: If the bean implements <code>ApplicationContextAware</code>, Spring calls <code>setApplicationContext()</code>.</li>
+<li><strong>Post-Processing</strong>: If the bean implements <code>InitializingBean</code>, the <code>afterPropertiesSet()</code> method is called. Additionally, any custom init methods defined are executed.</li>
+<li><strong>Ready to Use</strong>: The bean is now ready for use.</li>
+<li><strong>Destruction</strong>: When the application context is closed, if the bean implements <code>DisposableBean</code>, the <code>destroy()</code> method is called. Custom destroy methods are also executed.</li>
+</ol>
+<h3>Code Example</h3>
+<p>Here's a simple example that illustrates the creation of a Spring bean and its lifecycle:</p>
+<h4>1. Maven Dependency</h4>
+<p>First, make sure you have the Spring dependencies in your <code>pom.xml</code>:</p>
+<pre><code class="language-xml">&#x3C;dependencies>
+    &#x3C;dependency>
+        &#x3C;groupId>org.springframework.boot&#x3C;/groupId>
+        &#x3C;artifactId>spring-boot-starter&#x3C;/artifactId>
+    &#x3C;/dependency>
+&#x3C;/dependencies>
+</code></pre>
+<h4>2. Create a Bean Class</h4>
+<p>Let's create a simple bean called <code>MyBean</code>:</p>
+<pre><code class="language-java">import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.PreDestroy;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyBean {
+
+    private final Dependency dependency;
+
+    @Autowired
+    public MyBean(Dependency dependency) {
+        this.dependency = dependency;
+        System.out.println("MyBean instantiated!");
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("MyBean is initialized!");
+    }
+
+    public void doSomething() {
+        System.out.println("Doing something with " + dependency.getName());
+    }
+
+    @PreDestroy
+    public void cleanup() {
+        System.out.println("MyBean is being destroyed!");
+    }
+}
+</code></pre>
+<h4>3. Create a Dependency Class</h4>
+<p>We will create a simple dependency that <code>MyBean</code> will use:</p>
+<pre><code class="language-java">import org.springframework.stereotype.Component;
+
+@Component
+public class Dependency {
+    public String getName() {
+        return "Dependency";
+    }
+}
+</code></pre>
+<h4>4. Main Application Class</h4>
+<p>Finally, create your main application class to run the Spring Boot application:</p>
+<pre><code class="language-java">import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+public class MyApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(MyApplication.class, args);
+    }
+
+    @Bean
+    public CommandLineRunner run(MyBean myBean) {
+        return args -> {
+            myBean.doSomething();
+        };
+    }
+}
+</code></pre>
+<h3>Explanation of the Code</h3>
+<ol>
+<li><strong>@Component</strong>: This annotation tells Spring that <code>MyBean</code> and <code>Dependency</code> are beans that should be managed by the Spring container.</li>
+<li><strong>@Autowired</strong>: This annotation is used for dependency injection. Spring will automatically inject an instance of <code>Dependency</code> into <code>MyBean</code>.</li>
+<li><strong>@PostConstruct</strong>: This method is called after the bean's properties have been set, indicating that the bean is ready for use.</li>
+<li><strong>@PreDestroy</strong>: This method is called just before the bean is destroyed, allowing for cleanup activities.</li>
+</ol>
+<h3>Running the Application</h3>
+<p>When you run the application, you will see the following output in the console, indicating the different stages of the bean's lifecycle:</p>
+<pre><code>MyBean instantiated!
+MyBean is initialized!
+Doing something with Dependency
+MyBean is being destroyed!
+</code></pre>
+<h3>Summary</h3>
+<ul>
+<li>Beans are the objects managed by the Spring container.</li>
+<li>The lifecycle of a Spring bean consists of instantiation, property population, initialization, usage, and destruction.</li>
+<li>You can use various annotations to manage and define the behavior of your beans.</li>
+</ul>
+<p>This overview should give you a clear understanding of beans and their lifecycle in Spring and Spring Boot! If you have any more questions or need further details, feel free to ask!</p>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="conversation-item">
+    <div class="author user">
+        <img alt="You" />
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>Explain about bean scopes in detail with code scenarios and examples
+</p>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="conversation-item">
+    <div class="author GPT-3">
+        <svg width="41" height="41"><use xlink:href="#chatgpt" /></svg>
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>In Spring, the <strong>scope</strong> of a bean defines the lifecycle and visibility of that bean in the Spring container. Different scopes are used for different scenarios, depending on how you want to manage the lifecycle of your beans.</p>
+<h3>Bean Scopes in Spring</h3>
+<p>Spring provides several bean scopes, the most commonly used being:</p>
+<ol>
+<li><strong>Singleton</strong> (default scope)</li>
+<li><strong>Prototype</strong></li>
+<li><strong>Request</strong></li>
+<li><strong>Session</strong></li>
+<li><strong>Application</strong></li>
+<li><strong>Websocket</strong></li>
+</ol>
+<p>Let’s go through each scope in detail with code examples.</p>
+<h3>1. Singleton Scope</h3>
+<p><strong>Definition</strong>: A singleton bean is created only once per Spring IoC container. All requests for that bean will return the same instance.</p>
+<p><strong>Code Example</strong>:</p>
+<pre><code class="language-java">import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+
+@Component
+class SingletonBean {
+    public SingletonBean() {
+        System.out.println("SingletonBean instance created!");
+    }
+    
+    public void showMessage() {
+        System.out.println("Hello from SingletonBean!");
+    }
+}
+
+@Configuration
+class AppConfig {
+    @Bean
+    public SingletonBean singletonBean() {
+        return new SingletonBean();
+    }
+}
+
+// Main Application Class
+@SpringBootApplication
+public class SingletonDemoApplication {
+
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(SingletonDemoApplication.class, args);
+        
+        SingletonBean bean1 = context.getBean(SingletonBean.class);
+        bean1.showMessage();
+        
+        SingletonBean bean2 = context.getBean(SingletonBean.class);
+        bean2.showMessage();
+        
+        System.out.println("Are both beans the same? " + (bean1 == bean2));
+    }
+}
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>SingletonBean instance created!
+Hello from SingletonBean!
+Hello from SingletonBean!
+Are both beans the same? true
+</code></pre>
+<p><strong>Explanation</strong>: The output shows that the <code>SingletonBean</code> instance is created only once, and both calls to <code>getBean</code> return the same instance.</p>
+<hr>
+<h3>2. Prototype Scope</h3>
+<p><strong>Definition</strong>: A prototype bean is created every time it is requested from the Spring container. Each request results in a new instance.</p>
+<p><strong>Code Example</strong>:</p>
+<pre><code class="language-java">import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+
+@Component
+class PrototypeBean {
+    public PrototypeBean() {
+        System.out.println("PrototypeBean instance created!");
+    }
+    
+    public void showMessage() {
+        System.out.println("Hello from PrototypeBean!");
+    }
+}
+
+@Configuration
+class AppConfig {
+    @Bean
+    @Scope("prototype")  // Specify prototype scope
+    public PrototypeBean prototypeBean() {
+        return new PrototypeBean();
+    }
+}
+
+// Main Application Class
+@SpringBootApplication
+public class PrototypeDemoApplication {
+
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(PrototypeDemoApplication.class, args);
+        
+        PrototypeBean bean1 = context.getBean(PrototypeBean.class);
+        bean1.showMessage();
+        
+        PrototypeBean bean2 = context.getBean(PrototypeBean.class);
+        bean2.showMessage();
+        
+        System.out.println("Are both beans the same? " + (bean1 == bean2));
+    }
+}
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>PrototypeBean instance created!
+Hello from PrototypeBean!
+PrototypeBean instance created!
+Hello from PrototypeBean!
+Are both beans the same? false
+</code></pre>
+<p><strong>Explanation</strong>: The output confirms that a new instance of <code>PrototypeBean</code> is created each time it is requested, resulting in different instances.</p>
+<hr>
+<h3>3. Request Scope</h3>
+<p><strong>Definition</strong>: A request-scoped bean is created for each HTTP request. This scope is only valid in the context of a web application.</p>
+<p><strong>Code Example</strong>:</p>
+<pre><code class="language-java">import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Component
+@Scope("request")
+class RequestBean {
+    public RequestBean() {
+        System.out.println("RequestBean instance created!");
+    }
+    
+    public void showMessage() {
+        System.out.println("Hello from RequestBean!");
+    }
+}
+
+@RestController
+class RequestController {
+    
+    private final RequestBean requestBean;
+
+    public RequestController(RequestBean requestBean) {
+        this.requestBean = requestBean;
+    }
+
+    @GetMapping("/request")
+    public String requestScopeDemo() {
+        requestBean.showMessage();
+        return "Check console for RequestBean creation!";
+    }
+}
+
+// Main Application Class
+@SpringBootApplication
+public class RequestDemoApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(RequestDemoApplication.class, args);
+    }
+}
+</code></pre>
+<p><strong>Usage</strong>: You can run this Spring Boot application and hit the <code>/request</code> endpoint multiple times. You will see in the console that a new <code>RequestBean</code> instance is created for each request.</p>
+<p><strong>Output on multiple requests</strong>:</p>
+<pre><code>RequestBean instance created!
+Hello from RequestBean!
+</code></pre>
+<p><strong>Explanation</strong>: Each time the <code>/request</code> endpoint is accessed, a new instance of <code>RequestBean</code> is created.</p>
+<hr>
+<h3>4. Session Scope</h3>
+<p><strong>Definition</strong>: A session-scoped bean is created for an HTTP session. It is shared across multiple requests in the same session.</p>
+<p><strong>Code Example</strong>:</p>
+<pre><code class="language-java">import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Component
+@Scope("session")
+class SessionBean {
+    public SessionBean() {
+        System.out.println("SessionBean instance created!");
+    }
+    
+    public void showMessage() {
+        System.out.println("Hello from SessionBean!");
+    }
+}
+
+@RestController
+class SessionController {
+    
+    private final SessionBean sessionBean;
+
+    public SessionController(SessionBean sessionBean) {
+        this.sessionBean = sessionBean;
+    }
+
+    @GetMapping("/session")
+    public String sessionScopeDemo() {
+        sessionBean.showMessage();
+        return "Check console for SessionBean creation!";
+    }
+}
+
+// Main Application Class
+@SpringBootApplication
+public class SessionDemoApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SessionDemoApplication.class, args);
+    }
+}
+</code></pre>
+<p><strong>Usage</strong>: Run the application and hit the <code>/session</code> endpoint multiple times within the same session.</p>
+<p><strong>Output on multiple requests in the same session</strong>:</p>
+<pre><code>SessionBean instance created!
+Hello from SessionBean!
+</code></pre>
+<p><strong>Explanation</strong>: You will see that the <code>SessionBean</code> is created once per session. If you open a new session, a new instance will be created.</p>
+<hr>
+<h3>5. Application Scope</h3>
+<p><strong>Definition</strong>: An application-scoped bean is created once per Spring IoC container and shared across all requests and sessions in a web application.</p>
+<p><strong>Code Example</strong>:</p>
+<pre><code class="language-java">import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+@Component
+@Scope("application")
+class ApplicationBean {
+    public ApplicationBean() {
+        System.out.println("ApplicationBean instance created!");
+    }
+    
+    public void showMessage() {
+        System.out.println("Hello from ApplicationBean!");
+    }
+}
+
+// Main Application Class
+@SpringBootApplication
+public class ApplicationDemoApplication {
+
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(ApplicationDemoApplication.class, args);
+        
+        ApplicationBean bean1 = context.getBean(ApplicationBean.class);
+        bean1.showMessage();
+        
+        ApplicationBean bean2 = context.getBean(ApplicationBean.class);
+        bean2.showMessage();
+        
+        System.out.println("Are both beans the same? " + (bean1 == bean2));
+    }
+}
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>ApplicationBean instance created!
+Hello from ApplicationBean!
+Hello from ApplicationBean!
+Are both beans the same? true
+</code></pre>
+<p><strong>Explanation</strong>: This shows that the <code>ApplicationBean</code> is a singleton across the entire application.</p>
+<hr>
+<h3>6. Websocket Scope</h3>
+<p><strong>Definition</strong>: This scope is used in the context of WebSocket connections. Each WebSocket session will have its own bean instance.</p>
+<p><strong>Usage</strong>: The <code>@Scope("websocket")</code> annotation can be used in a similar way to the other scopes. However, you typically won't use this unless you're working specifically with WebSocket endpoints.</p>
+<hr>
+<h3>Summary</h3>
+<ul>
+<li><strong>Singleton</strong>: One instance per Spring container (default).</li>
+<li><strong>Prototype</strong>: A new instance each time it is requested.</li>
+<li><strong>Request</strong>: One instance per HTTP request.</li>
+<li><strong>Session</strong>: One instance per HTTP session.</li>
+<li><strong>Application</strong>: One instance per Spring IoC container, shared across requests and sessions.</li>
+<li><strong>Websocket</strong>: One instance per WebSocket session.</li>
+</ul>
+<p>Understanding bean scopes helps manage the lifecycle of beans efficiently according to the requirements of your application. If you have any more questions or need additional examples, feel free to ask!</p>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="conversation-item">
+    <div class="author user">
+        <img alt="You" />
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>Questions :
+1. in SingletonBean  , if we change the object in one class , will it reflect the change in all other classes ? if yes show me the code example and explain it.
+2. Explain one real world example wrt prototype bean
+same goes for other types</p>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="conversation-item">
+    <div class="author GPT-3">
+        <svg width="41" height="41"><use xlink:href="#chatgpt" /></svg>
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>Let's address each of your questions step by step, starting with the singleton bean behavior and followed by real-world examples for each type of bean scope.</p>
+<h3>1. Singleton Bean Behavior</h3>
+<p>In a singleton bean, if you modify the object's state in one class, it will reflect in all other classes that refer to the same instance. This is because all classes using the singleton bean reference the same object.</p>
+<h4>Code Example</h4>
+<p>Here's a simple example to illustrate this:</p>
+<pre><code class="language-java">import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Component;
+
+@Component
+class SingletonBean {
+    private String message = "Initial Message";
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}
+
+@Component
+class FirstClass {
+    private final SingletonBean singletonBean;
+
+    @Autowired
+    public FirstClass(SingletonBean singletonBean) {
+        this.singletonBean = singletonBean;
+    }
+
+    public void changeMessage() {
+        singletonBean.setMessage("Changed from FirstClass");
+    }
+}
+
+@Component
+class SecondClass {
+    private final SingletonBean singletonBean;
+
+    @Autowired
+    public SecondClass(SingletonBean singletonBean) {
+        this.singletonBean = singletonBean;
+    }
+
+    public void printMessage() {
+        System.out.println("Current Message: " + singletonBean.getMessage());
+    }
+}
+
+@SpringBootApplication
+public class SingletonExampleApplication {
+    public static void main(String[] args) {
+        var context = SpringApplication.run(SingletonExampleApplication.class, args);
+
+        FirstClass firstClass = context.getBean(FirstClass.class);
+        SecondClass secondClass = context.getBean(SecondClass.class);
+
+        // Print initial message
+        secondClass.printMessage(); // Outputs: Initial Message
+
+        // Change message from FirstClass
+        firstClass.changeMessage();
+
+        // Print message again from SecondClass
+        secondClass.printMessage(); // Outputs: Changed from FirstClass
+    }
+}
+</code></pre>
+<p><strong>Explanation</strong>:</p>
+<ol>
+<li><strong>SingletonBean</strong>: This bean has a <code>message</code> field that can be changed.</li>
+<li><strong>FirstClass</strong>: This class modifies the message in the <code>SingletonBean</code>.</li>
+<li><strong>SecondClass</strong>: This class prints the current message.</li>
+<li>In the <code>main</code> method, after calling <code>changeMessage()</code> from <code>FirstClass</code>, the message in <code>SecondClass</code> reflects that change because they both refer to the same instance of <code>SingletonBean</code>.</li>
+</ol>
+<hr>
+<h3>2. Real-World Example for Prototype Bean</h3>
+<p><strong>Scenario</strong>: Suppose you have a web application where users can generate unique reports. Each time a user requests a report, a new instance of the report generator should be created to ensure that the state does not carry over between different users.</p>
+<h4>Code Example</h4>
+<pre><code class="language-java">import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Component
+@Scope("prototype")
+class ReportGenerator {
+    private final String reportId;
+
+    public ReportGenerator() {
+        this.reportId = "Report-" + System.currentTimeMillis();
+        System.out.println("ReportGenerator instance created: " + reportId);
+    }
+
+    public String generateReport() {
+        return "Generated report with ID: " + reportId;
+    }
+}
+
+@RestController
+class ReportController {
+
+    private final ReportGenerator reportGenerator;
+
+    public ReportController(ReportGenerator reportGenerator) {
+        this.reportGenerator = reportGenerator;
+    }
+
+    @GetMapping("/generateReport")
+    public String generate() {
+        return reportGenerator.generateReport();
+    }
+}
+
+// Main Application Class
+@SpringBootApplication
+public class PrototypeExampleApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(PrototypeExampleApplication.class, args);
+    }
+}
+</code></pre>
+<p><strong>Usage</strong>: When you hit the <code>/generateReport</code> endpoint multiple times, you will receive different report IDs each time.</p>
+<p><strong>Output on multiple requests</strong>:</p>
+<pre><code>ReportGenerator instance created: Report-1632537193700
+Generated report with ID: Report-1632537193700
+
+ReportGenerator instance created: Report-1632537193800
+Generated report with ID: Report-1632537193800
+</code></pre>
+<p><strong>Explanation</strong>:</p>
+<ul>
+<li>Each time a report is generated, a new instance of <code>ReportGenerator</code> is created because of the prototype scope. This prevents any shared state issues among different reports.</li>
+</ul>
+<hr>
+<h3>3. Real-World Example for Request Bean</h3>
+<p><strong>Scenario</strong>: In a web application, you might want to keep track of user-specific data during a single HTTP request, such as user preferences for a specific request.</p>
+<h4>Code Example</h4>
+<pre><code class="language-java">import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Component
+@Scope("request")
+class UserRequestData {
+    private String userId;
+
+    public UserRequestData() {
+        System.out.println("UserRequestData instance created!");
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+}
+
+@RestController
+class UserController {
+
+    private final UserRequestData userRequestData;
+
+    public UserController(UserRequestData userRequestData) {
+        this.userRequestData = userRequestData;
+    }
+
+    @GetMapping("/setUserId")
+    public String setUserId(String userId) {
+        userRequestData.setUserId(userId);
+        return "User ID set to: " + userId;
+    }
+
+    @GetMapping("/getUserId")
+    public String getUserId() {
+        return "Current User ID: " + userRequestData.getUserId();
+    }
+}
+
+// Main Application Class
+@SpringBootApplication
+public class RequestExampleApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(RequestExampleApplication.class, args);
+    }
+}
+</code></pre>
+<p><strong>Usage</strong>: When you set and get the user ID through different requests, you will see that the user ID is unique to each HTTP request.</p>
+<p><strong>Output</strong>:</p>
+<ul>
+<li>When accessing <code>/setUserId?userId=123</code> and then <code>/getUserId</code>, you'll see:</li>
+</ul>
+<pre><code>UserRequestData instance created!
+User ID set to: 123
+Current User ID: 123
+</code></pre>
+<ul>
+<li>If you make a second request to <code>/setUserId?userId=456</code>, you will see that the user ID is independent:</li>
+</ul>
+<pre><code>User ID set to: 456
+Current User ID: 456
+</code></pre>
+<p><strong>Explanation</strong>:</p>
+<ul>
+<li>Each HTTP request gets a new instance of <code>UserRequestData</code>, which keeps track of the user ID only for that specific request.</li>
+</ul>
+<hr>
+<h3>4. Real-World Example for Session Bean</h3>
+<p><strong>Scenario</strong>: In a web application, you might want to maintain user settings or preferences throughout a user's session.</p>
+<h4>Code Example</h4>
+<pre><code class="language-java">import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Component
+@Scope("session")
+class UserPreferences {
+    private String theme;
+
+    public UserPreferences() {
+        System.out.println("UserPreferences instance created!");
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+}
+
+@RestController
+class PreferencesController {
+
+    private final UserPreferences userPreferences;
+
+    public PreferencesController(UserPreferences userPreferences) {
+        this.userPreferences = userPreferences;
+    }
+
+    @GetMapping("/setTheme")
+    public String setTheme(String theme) {
+        userPreferences.setTheme(theme);
+        return "Theme set to: " + theme;
+    }
+
+    @GetMapping("/getTheme")
+    public String getTheme() {
+        return "Current Theme: " + userPreferences.getTheme();
+    }
+}
+
+// Main Application Class
+@SpringBootApplication
+public class SessionExampleApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(SessionExampleApplication.class, args);
+    }
+}
+</code></pre>
+<p><strong>Usage</strong>: When you access <code>/setTheme?theme=dark</code> and then <code>/getTheme</code>, you'll see the current theme is preserved during the session.</p>
+<p><strong>Output</strong>:</p>
+<ul>
+<li>On accessing <code>/setTheme?theme=dark</code>:</li>
+</ul>
+<pre><code>UserPreferences instance created!
+Theme set to: dark
+</code></pre>
+<ul>
+<li>On accessing <code>/getTheme</code>:</li>
+</ul>
+<pre><code>Current Theme: dark
+</code></pre>
+<p><strong>Explanation</strong>:</p>
+<ul>
+<li>The same instance of <code>UserPreferences</code> is used across multiple requests in the same session, allowing user preferences to persist.</li>
+</ul>
+<hr>
+<h3>5. Real-World Example for Application Bean</h3>
+<p><strong>Scenario</strong>: You might use an application-scoped bean for configurations or settings that are shared across all requests and sessions in your application, like an application-wide feature toggle.</p>
+<h4>Code Example</h4>
+<pre><code class="language-java">import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+@Component
+@Scope("application")
+class FeatureToggle {
+    private boolean newFeatureEnabled = false;
+
+    public boolean isNewFeatureEnabled() {
+        return newFeatureEnabled;
+    }
+
+    public void enableNewFeature() {
+        this.newFeatureEnabled = true;
+    }
+
+    public void disableNewFeature() {
+        this.newFeatureEnabled = false;
+    }
+}
+
+// Main Application Class
+@SpringBootApplication
+public class ApplicationExampleApplication {
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(ApplicationExampleApplication.class, args);
+
+        FeatureToggle featureToggle1 = context.getBean(FeatureToggle.class);
+        featureToggle1.enableNewFeature();
+
+        FeatureToggle featureToggle2 = context.getBean(FeatureToggle.class);
+        System.out.println("Is new feature enabled? " + featureToggle2.isNewFeatureEnabled()); // true
+    }
+}
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Is new feature enabled? true
+</code></pre>
+<p><strong>Explanation</strong>:</p>
+<ul>
+<li>The <code>FeatureToggle</code> instance is shared across the entire application. If one part of your application enables the feature, it is enabled for all other parts as well.</li>
+</ul>
+<hr>
+<h3>Summary of Real-World Examples</h3>
+<ul>
+<li><strong>Singleton</strong>: A single configuration class shared across the application.</li>
+<li><strong>Prototype</strong>: Unique report generators for each report request.</li>
+<li><strong>Request</strong>: User-specific data during a single HTTP request.</li>
+<li><strong>Session</strong>: User preferences maintained throughout a session.</li>
+<li><strong>Application</strong>: Global feature toggles affecting the entire application.</li>
+</ul>
+<p>If you have further questions or need additional details, feel free to ask!</p>
+
+<h2>Summary</h2>
+<ul>
+    <li>Specifies the scope of a bean (singleton, prototype, request, session, etc.).</li>
+    <li>Controls the lifecycle and visibility of beans managed by Spring.</li>
+    <li><strong>Singleton Scope (@Scope("singleton"))</strong>
+        <ul>
+            <li><strong>Default Scope:</strong> If you don't specify a scope, Spring uses singleton by default.</li>
+            <li><strong>One Instance:</strong> Only one instance of the bean is created for the entire Spring container.</li>
+            <li><strong>Shared:</strong> This single instance is shared across all requests and all classes that need it.</li>
+            <li><strong>Example:</strong> Think of it as a single, shared object like a printer in an office. Everyone uses the same printer.</li>
+        </ul>
+    </li>
+    <li><strong>Prototype Scope (@Scope("prototype"))</strong>
+        <ul>
+            <li><strong>Multiple Instances:</strong> A new instance of the bean is created every time it is requested. This means that every time we use @Autowired, a new object will be given.</li>
+            <li><strong>Not Shared:</strong> Each request gets a new instance, so changes in one instance do not affect others.</li>
+            <li><strong>Example:</strong> Similar to a personal pen, where each person gets their own pen and they are independent of each other.</li>
+        </ul>
+    </li>
+    <li><strong>Request Scope (@Scope("request"))</strong>
+        <ul>
+            <li><strong>Web Applications:</strong> This scope is used in web applications, typically in controllers.</li>
+            <li><strong>One Instance Per Request:</strong> A new instance of the bean is created for each HTTP request.</li>
+            <li><strong>Limited Lifecycle:</strong> The bean exists only during the duration of the HTTP request.</li>
+            <li><strong>Example:</strong> Imagine a temporary form on a website that you fill out. It exists only while you're interacting with that page.</li>
+            <pre><code>
+@Controller
+public class ProductController {
+    @Autowired
+    private ShoppingCart shoppingCart;
+    // ...
+}
+
+@Scope("request") // Request scope for ShoppingCart
+public class ShoppingCart {
+    // ...
+}
+            </code></pre>
+        </ul>
+    </li>
+    <li><strong>Session Scope (@Scope("session"))</strong>
+        <ul>
+            <li><strong>Web Applications:</strong> Also used in web applications.</li>
+            <li><strong>One Instance Per Session:</strong> A new instance of the bean is created for each HTTP session.</li>
+            <li><strong>Shared in Session:</strong> The bean instance is shared across multiple requests within the same session.</li>
+            <li><strong>Example:</strong> Like a shopping cart on an e-commerce site, which persists across multiple pages during your shopping session.</li>
+        </ul>
+    </li>
+    <li><strong>Global Session Scope (@Scope("globalSession"))</strong>
+        <ul>
+            <li><strong>Portlets:</strong> This scope is specific to portlet-based web applications.</li>
+            <li><strong>One Instance Per Global Session:</strong> Similar to session scope but tied to the global session across different portlets.</li>
+            <li><strong>Example:</strong> In a portal environment where you have multiple portlets, this scope ensures the bean is shared across all portlets in the same session.</li>
+            <li><strong>Lifetime:</strong> Until the session ends or is restarted, it will have the same object.</li>
+        </ul>
+    </li>
+    <li><strong>Application Scope (@Scope("application"))</strong>
+        <ul>
+            <li><strong>Application-Wide:</strong> This scope creates a single instance of the bean for the entire lifecycle of the Spring application context.</li>
+            <li><strong>Shared Across Application:</strong> The instance is shared across the entire application.</li>
+            <li><strong>Example:</strong> Like a configuration setting that is available to the entire application for its entire lifetime.</li>
+        </ul>
+    </li>
+</ul>
+
+
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="conversation-item">
+    <div class="author user">
+        <img alt="You" />
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>Thanks.
+
+Give me 10 scenario based questions on this topic wrt bean scopes with code examples. So that i could answer any type of basic to tricky questions, interviewer, my throw</p>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="conversation-item">
+    <div class="author GPT-3">
+        <svg width="41" height="41"><use xlink:href="#chatgpt" /></svg>
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>Here are 10 scenario-based questions regarding Spring bean scopes, complete with code examples to help you prepare for potential interview questions. These questions range from basic to more advanced concepts, so you’ll be well-equipped to tackle different challenges.</p>
+<h3>1. Question: How would you manage user preferences in a web application where each user should have their own settings during a single session?</h3>
+<p><strong>Answer</strong>: Use a session-scoped bean to store user preferences.</p>
+<pre><code class="language-java">@Component
+@Scope("session")
+class UserPreferences {
+    private String theme;
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+}
+
+// Controller
+@RestController
+class PreferencesController {
+    private final UserPreferences userPreferences;
+
+    @Autowired
+    public PreferencesController(UserPreferences userPreferences) {
+        this.userPreferences = userPreferences;
+    }
+
+    @GetMapping("/setTheme")
+    public String setTheme(@RequestParam String theme) {
+        userPreferences.setTheme(theme);
+        return "Theme set to: " + theme;
+    }
+
+    @GetMapping("/getTheme")
+    public String getTheme() {
+        return "Current Theme: " + userPreferences.getTheme();
+    }
+}
+</code></pre>
+<hr>
+<h3>2. Question: What happens when you request a prototype bean multiple times within the same HTTP session?</h3>
+<p><strong>Answer</strong>: Each request for the prototype bean will create a new instance.</p>
+<pre><code class="language-java">@Component
+@Scope("prototype")
+class PrototypeBean {
+    public PrototypeBean() {
+        System.out.println("PrototypeBean instance created!");
+    }
+}
+
+// Usage
+@Autowired
+private ApplicationContext context;
+
+public void generateBeans() {
+    PrototypeBean bean1 = context.getBean(PrototypeBean.class);
+    PrototypeBean bean2 = context.getBean(PrototypeBean.class);
+    System.out.println("Are both beans the same? " + (bean1 == bean2)); // false
+}
+</code></pre>
+<hr>
+<h3>3. Question: How can you share configuration settings across the entire application while allowing modifications at runtime?</h3>
+<p><strong>Answer</strong>: Use an application-scoped bean.</p>
+<pre><code class="language-java">@Component
+@Scope("application")
+class AppConfig {
+    private boolean featureEnabled;
+
+    public boolean isFeatureEnabled() {
+        return featureEnabled;
+    }
+
+    public void setFeatureEnabled(boolean featureEnabled) {
+        this.featureEnabled = featureEnabled;
+    }
+}
+
+// Usage
+@Autowired
+private AppConfig appConfig;
+
+public void toggleFeature() {
+    appConfig.setFeatureEnabled(true);
+}
+</code></pre>
+<hr>
+<h3>4. Question: If a singleton bean is modified in one service, will it reflect in another service? Why or why not?</h3>
+<p><strong>Answer</strong>: Yes, because singleton beans are shared across the application context.</p>
+<pre><code class="language-java">@Component
+class SingletonBean {
+    private String value = "Initial Value";
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+}
+
+// Service A
+@Service
+class ServiceA {
+    @Autowired
+    private SingletonBean singletonBean;
+
+    public void updateValue() {
+        singletonBean.setValue("Updated from ServiceA");
+    }
+}
+
+// Service B
+@Service
+class ServiceB {
+    @Autowired
+    private SingletonBean singletonBean;
+
+    public String getValue() {
+        return singletonBean.getValue();
+    }
+}
+</code></pre>
+<hr>
+<h3>5. Question: How do you handle user-specific data during a single HTTP request?</h3>
+<p><strong>Answer</strong>: Use a request-scoped bean.</p>
+<pre><code class="language-java">@Component
+@Scope("request")
+class RequestScopedBean {
+    private String userId;
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+}
+
+// Controller
+@RestController
+class UserController {
+    private final RequestScopedBean requestScopedBean;
+
+    @Autowired
+    public UserController(RequestScopedBean requestScopedBean) {
+        this.requestScopedBean = requestScopedBean;
+    }
+
+    @GetMapping("/setUserId")
+    public String setUserId(@RequestParam String userId) {
+        requestScopedBean.setUserId(userId);
+        return "User ID set: " + userId;
+    }
+
+    @GetMapping("/getUserId")
+    public String getUserId() {
+        return "Current User ID: " + requestScopedBean.getUserId();
+    }
+}
+</code></pre>
+<hr>
+<h3>6. Question: Can you explain the lifecycle of a prototype bean?</h3>
+<p><strong>Answer</strong>: A prototype bean is instantiated every time it is requested from the Spring container. It is not managed by Spring after the instantiation.</p>
+<pre><code class="language-java">@Component
+@Scope("prototype")
+class PrototypeBean {
+    public PrototypeBean() {
+        System.out.println("PrototypeBean created");
+    }
+}
+
+// Usage
+@Autowired
+private ApplicationContext context;
+
+public void testPrototypeBean() {
+    PrototypeBean bean1 = context.getBean(PrototypeBean.class); // new instance
+    PrototypeBean bean2 = context.getBean(PrototypeBean.class); // new instance
+    // Outputs:
+    // PrototypeBean created
+    // PrototypeBean created
+}
+</code></pre>
+<hr>
+<h3>7. Question: How would you implement a scenario where you need to create a new instance of a bean for every HTTP request?</h3>
+<p><strong>Answer</strong>: Use a request-scoped bean.</p>
+<pre><code class="language-java">@Component
+@Scope("request")
+class RequestData {
+    private String data;
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public String getData() {
+        return data;
+    }
+}
+
+// Controller
+@RestController
+class DataController {
+    private final RequestData requestData;
+
+    @Autowired
+    public DataController(RequestData requestData) {
+        this.requestData = requestData;
+    }
+
+    @GetMapping("/data")
+    public String handleRequest(@RequestParam String data) {
+        requestData.setData(data);
+        return "Data stored: " + requestData.getData();
+    }
+}
+</code></pre>
+<hr>
+<h3>8. Question: Is it possible for a singleton bean to depend on a prototype bean? If yes, how?</h3>
+<p><strong>Answer</strong>: Yes, but you need to use a method that gets the prototype bean each time it’s needed.</p>
+<pre><code class="language-java">@Component
+@Scope("singleton")
+class SingletonService {
+    @Autowired
+    private ApplicationContext context;
+
+    public PrototypeBean getPrototypeBean() {
+        return context.getBean(PrototypeBean.class);
+    }
+}
+
+// Usage
+@Autowired
+private SingletonService singletonService;
+
+public void usePrototype() {
+    PrototypeBean prototype1 = singletonService.getPrototypeBean();
+    PrototypeBean prototype2 = singletonService.getPrototypeBean();
+    // Outputs:
+    // Different instances of PrototypeBean
+}
+</code></pre>
+<hr>
+<h3>9. Question: How do you define a bean to be created only once and shared throughout the application, regardless of the request or session?</h3>
+<p><strong>Answer</strong>: Use a singleton scope (default).</p>
+<pre><code class="language-java">@Component
+class SharedBean {
+    public SharedBean() {
+        System.out.println("SharedBean instance created");
+    }
+}
+
+// Usage
+@Autowired
+private SharedBean sharedBean;
+
+public void someMethod() {
+    System.out.println("Using shared bean: " + sharedBean);
+}
+</code></pre>
+<hr>
+<h3>10. Question: Can you explain the importance of bean scopes and when to use each?</h3>
+<p><strong>Answer</strong>:</p>
+<ul>
+<li><strong>Singleton</strong>: Use when only one instance is needed for the entire application (e.g., configuration settings).</li>
+<li><strong>Prototype</strong>: Use when each request requires a new instance (e.g., report generation).
+-Certainly! Here are 10 scenario-based questions related to bean scopes in Spring, along with code examples and detailed explanations. These scenarios will help you prepare for a variety of interview questions regarding bean scopes.</li>
+</ul>
+<h3>1. <strong>Singleton Scope: Multiple Access Points</strong></h3>
+<p><strong>Question</strong>: You have a singleton bean that keeps track of user login counts. If two different classes modify the login count simultaneously, how will it affect the bean state?</p>
+<p><strong>Code Example</strong>:</p>
+<pre><code class="language-java">import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+class LoginCounter {
+    private int count = 0;
+
+    public void increment() {
+        count++;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
+@Component
+class UserService {
+    private final LoginCounter loginCounter;
+
+    @Autowired
+    public UserService(LoginCounter loginCounter) {
+        this.loginCounter = loginCounter;
+    }
+
+    public void userLoggedIn() {
+        loginCounter.increment();
+        System.out.println("User logged in. Total logins: " + loginCounter.getCount());
+    }
+}
+
+@Component
+class AdminService {
+    private final LoginCounter loginCounter;
+
+    @Autowired
+    public AdminService(LoginCounter loginCounter) {
+        this.loginCounter = loginCounter;
+    }
+
+    public void adminLoggedIn() {
+        loginCounter.increment();
+        System.out.println("Admin logged in. Total logins: " + loginCounter.getCount());
+    }
+}
+</code></pre>
+<p><strong>Explanation</strong>:</p>
+<ul>
+<li>Both <code>UserService</code> and <code>AdminService</code> access the same <code>LoginCounter</code> singleton bean. If multiple users log in simultaneously, the login count will reflect all logins, potentially leading to race conditions if accessed from multiple threads. This showcases the shared state of singleton beans.</li>
+</ul>
+<hr>
+<h3>2. <strong>Prototype Scope: Unique Instances</strong></h3>
+<p><strong>Question</strong>: You have a prototype bean that generates unique session IDs for each user. If two users log in at the same time, will they receive the same session ID?</p>
+<p><strong>Code Example</strong>:</p>
+<pre><code class="language-java">import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+@Component
+@Scope("prototype")
+class SessionIdGenerator {
+    private final String sessionId;
+
+    public SessionIdGenerator() {
+        this.sessionId = "Session-" + System.currentTimeMillis();
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+}
+
+@Component
+class LoginService {
+    public String login() {
+        SessionIdGenerator generator = new SessionIdGenerator();
+        return generator.getSessionId();
+    }
+}
+</code></pre>
+<p><strong>Explanation</strong>:</p>
+<ul>
+<li>Each call to the <code>login</code> method creates a new <code>SessionIdGenerator</code> instance. Therefore, each user will receive a unique session ID even if they log in simultaneously. This illustrates the nature of prototype beans, which are instantiated each time they are requested.</li>
+</ul>
+<hr>
+<h3>3. <strong>Request Scope: Unique to Each Request</strong></h3>
+<p><strong>Question</strong>: In a web application, how can you ensure that user preferences are maintained across multiple requests from the same user during an HTTP session?</p>
+<p><strong>Code Example</strong>:</p>
+<pre><code class="language-java">import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Component
+@Scope("request")
+class UserPreferences {
+    private String theme;
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+}
+
+@RestController
+class PreferencesController {
+    private final UserPreferences userPreferences;
+
+    public PreferencesController(UserPreferences userPreferences) {
+        this.userPreferences = userPreferences;
+    }
+
+    @GetMapping("/setTheme")
+    public String setTheme(String theme) {
+        userPreferences.setTheme(theme);
+        return "Theme set to: " + theme;
+    }
+
+    @GetMapping("/getTheme")
+    public String getTheme() {
+        return "Current Theme: " + userPreferences.getTheme();
+    }
+}
+</code></pre>
+<p><strong>Explanation</strong>:</p>
+<ul>
+<li>The <code>UserPreferences</code> bean is request-scoped, so it gets a new instance for each HTTP request. This allows the user's theme preferences to be maintained throughout the request lifecycle, but resets for new requests.</li>
+</ul>
+<hr>
+<h3>4. <strong>Session Scope: Maintain State Across Requests</strong></h3>
+<p><strong>Question</strong>: In an online shopping application, how can you manage a user's shopping cart using session-scoped beans?</p>
+<p><strong>Code Example</strong>:</p>
+<pre><code class="language-java">import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
+@Scope("session")
+class ShoppingCart {
+    private final List&#x3C;String> items = new ArrayList&#x3C;>();
+
+    public void addItem(String item) {
+        items.add(item);
+    }
+
+    public List&#x3C;String> getItems() {
+        return items;
+    }
+}
+
+@RestController
+class CartController {
+    private final ShoppingCart shoppingCart;
+
+    public CartController(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
+
+    @GetMapping("/addItem")
+    public String addItem(String item) {
+        shoppingCart.addItem(item);
+        return "Item added: " + item;
+    }
+
+    @GetMapping("/viewCart")
+    public List&#x3C;String> viewCart() {
+        return shoppingCart.getItems();
+    }
+}
+</code></pre>
+<p><strong>Explanation</strong>:</p>
+<ul>
+<li>The <code>ShoppingCart</code> is session-scoped, meaning it will retain items added by the user throughout their session. Each user will have their own shopping cart instance, maintaining state across requests.</li>
+</ul>
+<hr>
+<h3>5. <strong>Application Scope: Global Configuration</strong></h3>
+<p><strong>Question</strong>: How can you implement a global feature toggle using an application-scoped bean that can be modified at runtime?</p>
+<p><strong>Code Example</strong>:</p>
+<pre><code class="language-java">import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+@Component
+@Scope("application")
+class FeatureToggle {
+    private boolean isFeatureEnabled;
+
+    public boolean isFeatureEnabled() {
+        return isFeatureEnabled;
+    }
+
+    public void enableFeature() {
+        isFeatureEnabled = true;
+    }
+
+    public void disableFeature() {
+        isFeatureEnabled = false;
+    }
+}
+
+@Component
+class FeatureService {
+    private final FeatureToggle featureToggle;
+
+    public FeatureService(FeatureToggle featureToggle) {
+        this.featureToggle = featureToggle;
+    }
+
+    public String checkFeature() {
+        return featureToggle.isFeatureEnabled() ? "Feature is enabled" : "Feature is disabled";
+    }
+}
+</code></pre>
+<p><strong>Explanation</strong>:</p>
+<ul>
+<li>The <code>FeatureToggle</code> bean is application-scoped and shared across the application. If one service enables the feature, it will be reflected in all other parts of the application, showcasing a global configuration.</li>
+</ul>
+<hr>
+<h3>6. <strong>Thread Safety in Singleton Beans</strong></h3>
+<p><strong>Question</strong>: How would you ensure thread safety in a singleton bean that increments a counter for logged events?</p>
+<p><strong>Code Example</strong>:</p>
+<pre><code class="language-java">import org.springframework.stereotype.Component;
+
+@Component
+class EventCounter {
+    private int count = 0;
+
+    public synchronized void increment() {
+        count++;
+    }
+
+    public synchronized int getCount() {
+        return count;
+    }
+}
+</code></pre>
+<p><strong>Explanation</strong>:</p>
+<ul>
+<li>Using <code>synchronized</code> ensures that the methods <code>increment()</code> and <code>getCount()</code> are thread-safe. This is crucial when multiple threads might access the singleton instance simultaneously, preventing race conditions.</li>
+</ul>
+<hr>
+<h3>7. <strong>Using Prototype Beans in a Singleton Context</strong></h3>
+<p><strong>Question</strong>: How do you correctly use a prototype bean within a singleton bean?</p>
+<p><strong>Code Example</strong>:</p>
+<pre><code class="language-java">import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Lookup;
+import org.springframework.stereotype.Component;
+
+@Component
+class PrototypeBean {
+    public PrototypeBean() {
+        System.out.println("PrototypeBean instance created!");
+    }
+
+    public String getMessage() {
+        return "Hello from PrototypeBean!";
+    }
+}
+
+@Component
+class SingletonBean {
+    @Lookup
+    public PrototypeBean createPrototypeBean() {
+        // Spring will override this method to return a prototype bean
+        return null;
+    }
+
+    public void displayMessage() {
+        PrototypeBean prototypeBean = createPrototypeBean();
+        System.out.println(prototypeBean.getMessage());
+    }
+}
+</code></pre>
+<p><strong>Explanation</strong>:</p>
+<ul>
+<li>The <code>@Lookup</code> annotation allows the singleton bean to request a new instance of the prototype bean whenever <code>createPrototypeBean()</code> is called. This ensures that the singleton can work with prototype beans without caching their instances.</li>
+</ul>
+<hr>
+<h3>8. <strong>Request Scope in Web Applications</strong></h3>
+<p><strong>Question</strong>: How does request scope handle the creation of beans in a web application when using multiple controllers?</p>
+<p><strong>Code Example</strong>:</p>
+<pre><code class="language-java">import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Component
+@Scope("request")
+class UserRequestData {
+    private String username;
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+}
+
+@RestController
+class UserController {
+    private final UserRequestData userRequestData;
+
+    public UserController(UserRequestData userRequestData) {
+        this.userRequestData = userRequestData;
+    }
+
+    @GetMapping("/setUsername")
+    public String setUsername(String username) {
+        userRequestData.setUsername(username);
+        return "Username set to: " + username;
+    }
+}
+
+@RestController
+class AnotherController {
+    private final UserRequestData userRequestData;
+
+    public AnotherController(UserRequestData userRequestData) {
+        this.userRequestData = userRequestData;
+    }
+
+    @GetMapping("/getUsername")
+    public String getUsername() {
+        return "Current Username: " + userRequestData.getUsername();
+    }
+}
+</code></pre>
+<p><strong>Explanation</strong>:</p>
+<ul>
+<li>Each request to <code>/setUsername</code> or <code>/getUsername</code> gets its own instance of <code>UserRequestData</code>. This means setting the username in one request does not affect another request.</li>
+</ul>
+<hr>
+<h3>9. <strong>Shared State vs. Unique State</strong></h3>
+<p><strong>Question</strong>: What is the difference in shared state management between singleton and prototype beans?</p>
+<p><strong>Code Example</strong>:</p>
+<pre><code class="language-java">@Component
+@Scope("singleton")
+class SharedCounter {
+    private int count = 0;
+
+    public void increment() {
+        count++;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
+@Component
+@Scope("prototype")
+class UniqueCounter {
+    private int count = 0;
+
+    public void increment() {
+        count++;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
+// Usage
+@Autowired
+private ApplicationContext context;
+
+public void testCounters() {
+    SharedCounter sharedCounter1 = context.getBean(SharedCounter.class);
+    SharedCounter sharedCounter2 = context.getBean(SharedCounter.class);
+    sharedCounter1.increment();
+    System.out.println(sharedCounter2.getCount()); // 1
+
+    UniqueCounter uniqueCounter1 = context.getBean(UniqueCounter.class);
+    UniqueCounter uniqueCounter2 = context.getBean(UniqueCounter.class);
+    uniqueCounter1.increment();
+    System.out.println(uniqueCounter2.getCount()); // 0
+}
+</code></pre>
+<p><strong>Explanation</strong>:</p>
+<ul>
+<li><code>SharedCounter</code> demonstrates shared state, where both instances reflect the same count. <code>UniqueCounter</code>, however, provides independent state across instances, showcasing the prototype's unique nature.</li>
+</ul>
+<hr>
+<h3>10. <strong>Best Practices for Bean Scopes</strong></h3>
+<p><strong>Question</strong>: What are some best practices for managing bean scopes in a Spring application?</p>
+<p><strong>Answer</strong>:</p>
+<ol>
+<li><strong>Use Singleton Scope for Shared Resources</strong>: For configuration classes or resources that do not maintain state between calls.</li>
+<li><strong>Use Prototype Scope for Stateful Beans</strong>: For beans that need to maintain their own state.</li>
+<li><strong>Avoid Using Prototype Beans in Singletons Directly</strong>: Use the <code>@Lookup</code> method or <code>ApplicationContext</code> to obtain instances.</li>
+<li><strong>Consider Performance Implications</strong>: Creating new instances for prototype beans can affect performance; use wisely.</li>
+<li><strong>Be Aware of Thread Safety</strong>: Singleton beans should be thread-safe if accessed from multiple threads.</li>
+<li><strong>Use Request and Session Scopes for Web Applications</strong>: Leverage these scopes to maintain user state in web applications effectively.</li>
+</ol>
+<hr>
+<p>These questions and examples should help you cover a wide range of scenarios related to bean scopes in Spring. Feel free to ask if you have any more questions or need further explanations!</p>
+        </div>
+    </div>
+    
+</div>
+    </div>
+
+
+    <script>
+        function toggleDarkMode(mode) {
+            const html = document.querySelector('html')
+            const isDarkMode = html.getAttribute('data-theme') === 'dark'
+            const newMode = mode || (isDarkMode ? 'light' : 'dark')
+            if (newMode !== 'dark' && newMode !== 'light') return
+            html.setAttribute('data-theme', newMode)
+
+            const url = new URL(window.location)
+            url.searchParams.set('theme', newMode)
+            window.history.replaceState({}, '', url)
+        }
+
+        // Support for ?theme=dark
+        const urlParams = new URLSearchParams(window.location.search)
+        const theme = urlParams.get('theme')
+        if (theme) toggleDarkMode(theme)
+
+        document.querySelector('.toggle').addEventListener('click', () => toggleDarkMode())
+    </script>
+</body>
+
+</html>
