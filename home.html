@@ -13,24 +13,26 @@
         color: #333;
       }
       .home-container {
-    width: 90%; /* Set width to 90% of the viewport width */
-    max-width: 100%; /* Ensure it does not exceed 100% of the viewport width */
-    margin: 0 auto; /* Center the container horizontally */
-    padding: 10px;
-    border-radius: 10px;
-    background-color: #ffffff; /* White background for the container */
+        width: 90%; /* Set width to 90% of the viewport width */
+        max-width: 100%; /* Ensure it does not exceed 100% of the viewport width */
+        margin: 0 auto; /* Center the container horizontally */
+        padding: 10px;
+        border-radius: 10px;
+        background-color: #ffffff; /* White background for the container */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-}
+    width: 98% !important; /* Full viewport width */
+    max-width: 100% !important; /* Remove any max-width limit */
+      }
 
 
 
       .home-header {
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
       }
 
-      .home-header h1 {
-        font-size: 2.5em;
+      .home-header h2 {
+        font-size: 1.5em;
         color: #2980b9; /* Use your preferred color */
       }
 
@@ -58,14 +60,14 @@
       }
 
       .category-box {
-    flex: 1 1 calc(20% - 20px); /* 5 boxes per row */
-    border: 1px solid #2980b9; /* Border color */
-    border-radius: 8px; /* Rounded corners */
-    padding: 15px;
-    background-color: #f9f9f9; /* Light background for boxes */
+        flex: 1 1 calc(20% - 20px); /* 5 boxes per row */
+        border: 1px solid #2980b9; /* Border color */
+        border-radius: 8px; /* Rounded corners */
+        padding: 15px;
+        background-color: #f9f9f9; /* Light background for boxes */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
-    transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for hover effect */
-}
+        transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for hover effect */
+      }
 
 
       .category-box:hover {
@@ -152,7 +154,7 @@
   <body>
     <div class="home-container">
       <header class="home-header">
-        <h1>Welcome to the Conversations Archive!</h1>
+        <h2>Welcome to the Conversations Archive!</h1>
         <p>Your go-to resource for Spring framework interview preparation.</p>
         <p>Featured by CHAT GPT</p>
       </header>

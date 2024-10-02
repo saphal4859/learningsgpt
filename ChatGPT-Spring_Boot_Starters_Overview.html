@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="https://chat.openai.com/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spring Boot Starters Overview</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll()
+    </script>
+
+    <style>
+        :root {
+            --page-text: #0d0d0d;
+            --page-bg: #fff;
+            --td-borders: #374151;
+            --th-borders: #4b5563;
+            --tw-prose-code: var(--page-text);
+            --tw-prose-counters: #9b9b9b;
+            --tw-prose-headings: var(--page-text);
+            --tw-prose-hr: rgba(0,0,0,.25);
+            --tw-prose-links: var(--page-text);
+            --tw-prose-quotes: var(--page-text);
+            --meta-title: #616c77;
+        }
+
+        [data-theme="dark"] {
+            --page-text: #ececec;
+            --page-bg: #212121;
+            --tw-prose-code: var(--page-text);
+            --tw-prose-counters: #9b9b9b;
+            --tw-prose-headings: var(--page-text);
+            --tw-prose-hr: hsla(0,0%,100%,.25);
+            --tw-prose-links: var(--page-text);
+            --tw-prose-quotes: var(--page-text);
+            --meta-title: #959faa;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        ::-webkit-scrollbar {
+            height: 1rem;
+            width: .5rem
+        }
+
+        ::-webkit-scrollbar:horizontal {
+            height: .5rem;
+            width: 1rem
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: transparent;
+            border-radius: 9999px
+        }
+
+        ::-webkit-scrollbar-thumb {
+            --tw-border-opacity: 1;
+            background-color: rgba(217,217,227,.8);
+            border-color: rgba(255,255,255,var(--tw-border-opacity));
+            border-radius: 9999px;
+            border-width: 1px
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            --tw-bg-opacity: 1;
+            background-color: rgba(236,236,241,var(--tw-bg-opacity))
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            --tw-bg-opacity: 1;
+            background-color: rgba(86,88,105,var(--tw-bg-opacity))
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            --tw-bg-opacity: 1;
+            background-color: rgba(172,172,190,var(--tw-bg-opacity))
+        }
+
+        @media (min-width: 768px) {
+            .scrollbar-trigger ::-webkit-scrollbar-thumb {
+                visibility:hidden
+            }
+
+            .scrollbar-trigger:hover ::-webkit-scrollbar-thumb {
+                visibility: visible
+            }
+        }
+
+        body {
+            font-family: Söhne,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,Helvetica Neue,Arial,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--page-text);
+            background-color: var(--page-bg);
+            margin: 0;
+            padding: 0;
+        }
+
+        [data-theme="light"] .sun {
+            display: none;
+        }
+
+        [data-theme="dark"] .moon {
+            display: none;
+        }
+
+        .toggle {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+        }
+
+        .metadata_container {
+            display: flex;
+            flex-direction: column;
+            margin-top: 8px;
+            padding-left: 1rem;
+        }
+
+        .metadata_item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            border-radius: 16px;
+            padding: 4px 0.5rem;
+        }
+
+        .metadata_item:hover {
+            background-color: rgba(0,0,0,.1);
+        }
+
+        .metadata_item > div:first-child {
+            flex: 0 1 100px;
+            color: var(--meta-title);
+        }
+
+        .metadata_item > div:last-child {
+            flex: 1;
+        }
+
+        a {
+            color: var(--tw-prose-links);
+            font-size: 0.8rem;
+            text-decoration-line: underline;
+            text-underline-offset: 2px;
+        }
+
+        .conversation-content > p:first-child,
+        ol:first-child {
+            margin-top: 0;
+        }
+
+        p>code, li>code {
+            color: var(--tw-prose-code);
+            font-weight: 600;
+            font-size: .875em;
+        }
+
+        p>code::before,
+        p>code::after,
+        li>code::before,
+        li>code::after {
+            content: "`";
+        }
+
+        hr {
+            width: 100%;
+            height: 0;
+            border: 1px solid var(--tw-prose-hr);
+            margin-bottom: 1em;
+            margin-top: 1em;
+        }
+
+        pre {
+            color: #ffffff;
+            background-color: #000000;
+            overflow-x: auto;
+            margin: 0 0 1rem 0;
+            border-radius: 0.375rem;
+        }
+
+        pre>code {
+            font-family: Söhne Mono, Monaco, Andale Mono, Ubuntu Mono, monospace !important;
+            font-weight: 400;
+            font-size: .875em;
+            line-height: 1.7142857;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--tw-prose-headings);
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 2.25em;
+            font-weight: 600;
+            line-height: 1.1111111;
+            margin-bottom: 0.8888889em;
+            margin-top: 0;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            font-weight: 700;
+            line-height: 1.3333333;
+            margin-bottom: 1em;
+            margin-top: 2em;
+        }
+
+        h3 {
+            font-size: 1.25em;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: .6em;
+            margin-top: 1.6em;
+        }
+
+        h4 {
+            font-weight: 400;
+            line-height: 1.5;
+            margin-bottom: .5em;
+            margin-top: 1.5em
+        }
+
+        h3,h4 {
+            margin-bottom: .5rem;
+            margin-top: 1rem;
+        }
+
+        h5 {
+            font-weight: 600;
+        }
+
+        blockquote {
+            border-left: 2px solid rgba(142,142,160,1);
+            color: var(--tw-prose-quotes);
+            font-style: italic;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 1rem;
+            margin: 1.6em 0;
+            padding-left: 1em;
+            quotes: "\201C""\201D""\2018""\2019";
+        }
+
+        blockquote p:first-of-type:before {
+            content: open-quote;
+        }
+
+        blockquote p:last-of-type:after {
+            content: close-quote;
+        }
+
+        ol, ul {
+            padding-left: 1.1rem;
+        }
+
+        ::marker {
+            color: var(--tw-prose-counters);
+            font-weight: 400;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0;
+            table-layout: auto;
+            text-align: left;
+            font-size: .875em;
+            line-height: 1.7142857;
+        }
+
+        table * {
+            box-sizing: border-box;
+            border-width: 0;
+            border-style: solid;
+            border-color: #d9d9e3;
+        }
+
+        table thead {
+            border-bottom-color: var(--th-borders);
+            border-bottom-width: 1px;
+        }
+
+        table th {
+            background-color: rgba(236,236,241,.2);
+            border-bottom-width: 1px;
+            border-left-width: 1px;
+            border-top-width: 1px;
+            padding: 0.25rem 0.75rem;
+        }
+
+        table th:first-child {
+            border-top-left-radius: 0.375rem;
+        }
+
+        table th:last-child {
+            border-right-width: 1px;
+            border-top-right-radius: 0.375rem;
+        }
+
+        table tbody tr {
+            border-bottom-color: var(--td-borders);
+            border-bottom-width: 1px;
+        }
+
+        table tbody tr:last-child {
+            border-bottom-width: 0;
+        }
+
+        table tbody tr:last-child td:first-child {
+            border-bottom-left-radius: 0.375rem;
+        }
+
+        table tbody tr:last-child td:last-child {
+            border-bottom-right-radius: 0.375rem;
+        }
+
+        table td {
+            border-bottom-width: 1px;
+            border-left-width: 1px;
+            padding: 0.25rem 0.75rem;
+        }
+
+        table td:last-child {
+            border-right-width: 1px;
+        }
+
+        [type=checkbox], [type=radio] {
+            accent-color: #2563eb;
+        }
+
+        .conversation {
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        @media (min-width: 1280px) {
+            .conversation {
+                max-width: 48rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .conversation {
+                max-width: 40rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .conversation {
+                max-width: 48rem;
+            }
+        }
+
+        .conversation-header {
+            margin-bottom: 1rem;
+        }
+
+        .conversation-header h1 {
+            margin: 0;
+        }
+
+        .conversation-header h1 a {
+            font-size: 1.5rem;
+        }
+
+        .conversation-header .conversation-export {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .conversation-header p {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .conversation-item {
+            display: flex;
+            position: relative;
+            padding: 1rem;
+            border-left: 1px solid rgba(0,0,0,.1);
+            border-right: 1px solid rgba(0,0,0,.1);
+            border-bottom: 1px solid rgba(0,0,0,.1);
+        }
+
+        .conversation-item:first-of-type {
+            border-top: 1px solid rgba(0,0,0,.1);
+        }
+
+        .author {
+            display: flex;
+            flex: 0 0 30px;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 0.125rem;
+            margin-right: 1rem;
+            overflow: hidden;
+        }
+
+        .author svg {
+            color: #fff;
+            width: 22px;
+            height: 22px;
+        }
+
+        .author img {
+            content: url(data:image/png;base64,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);
+            width: 100%;
+            height: 100%;
+        }
+
+        .author.GPT-3 {
+            background-color: rgb(16, 163, 127);
+        }
+
+        .author.GPT-4 {
+            background-color: black;
+        }
+
+        .conversation-content-wrapper {
+            display: flex;
+            position: relative;
+            overflow: hidden;
+            flex: 1 1 auto;
+            flex-direction: column;
+        }
+
+        .conversation-content {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .conversation-content p {
+            white-space: pre-wrap;
+            line-height: 28px;
+        }
+
+        .conversation-content img, .conversation-content video {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 2em;
+            margin-top: 2em;
+        }
+
+        .time {
+            position: absolute;
+            right: 8px;
+            bottom: 0;
+            font-size: 0.8rem;
+            color: #acacbe
+        }
+    </style>
+</head>
+
+<body>
+    <svg aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <symbol id="chatgpt" viewBox="0 0 41 41">
+            <path d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707ZM22.4978 37.8849C20.7443 37.8874 19.0459 37.2733 17.6994 36.1501C17.7601 36.117 17.8666 36.0586 17.936 36.0161L25.9004 31.4156C26.1003 31.3019 26.2663 31.137 26.3813 30.9378C26.4964 30.7386 26.5563 30.5124 26.5549 30.2825V19.0542L29.9213 20.998C29.9389 21.0068 29.9541 21.0198 29.9656 21.0359C29.977 21.052 29.9842 21.0707 29.9867 21.0902V30.3889C29.9842 32.375 29.1946 34.2791 27.7909 35.6841C26.3872 37.0892 24.4838 37.8806 22.4978 37.8849ZM6.39227 31.0064C5.51397 29.4888 5.19742 27.7107 5.49804 25.9832C5.55718 26.0187 5.66048 26.0818 5.73461 26.1244L13.699 30.7248C13.8975 30.8408 14.1233 30.902 14.3532 30.902C14.583 30.902 14.8088 30.8408 15.0073 30.7248L24.731 25.1103V28.9979C24.7321 29.0177 24.7283 29.0376 24.7199 29.0556C24.7115 29.0736 24.6988 29.0893 24.6829 29.1012L16.6317 33.7497C14.9096 34.7416 12.8643 35.0097 10.9447 34.4954C9.02506 33.9811 7.38785 32.7263 6.39227 31.0064ZM4.29707 13.6194C5.17156 12.0998 6.55279 10.9364 8.19885 10.3327C8.19885 10.4013 8.19491 10.5228 8.19491 10.6071V19.808C8.19351 20.0378 8.25334 20.2638 8.36823 20.4629C8.48312 20.6619 8.64893 20.8267 8.84863 20.9404L18.5723 26.5542L15.206 28.4979C15.1894 28.5089 15.1703 28.5155 15.1505 28.5173C15.1307 28.5191 15.1107 28.516 15.0924 28.5082L7.04046 23.8557C5.32135 22.8601 4.06716 21.2235 3.55289 19.3046C3.03862 17.3858 3.30624 15.3413 4.29707 13.6194ZM31.955 20.0556L22.2312 14.4411L25.5976 12.4981C25.6142 12.4872 25.6333 12.4805 25.6531 12.4787C25.6729 12.4769 25.6928 12.4801 25.7111 12.4879L33.7631 17.1364C34.9967 17.849 36.0017 18.8982 36.6606 20.1613C37.3194 21.4244 37.6047 22.849 37.4832 24.2684C37.3617 25.6878 36.8382 27.0432 35.9743 28.1759C35.1103 29.3086 33.9415 30.1717 32.6047 30.6641C32.6047 30.5947 32.6047 30.4733 32.6047 30.3889V21.188C32.6066 20.9586 32.5474 20.7328 32.4332 20.5338C32.319 20.3348 32.154 20.1698 31.955 20.0556ZM35.3055 15.0128C35.2464 14.9765 35.1431 14.9142 35.069 14.8717L27.1045 10.2712C26.906 10.1554 26.6803 10.0943 26.4504 10.0943C26.2206 10.0943 25.9948 10.1554 25.7963 10.2712L16.0726 15.8858V11.9982C16.0715 11.9783 16.0753 11.9585 16.0837 11.9405C16.0921 11.9225 16.1048 11.9068 16.1207 11.8949L24.1719 7.25025C25.4053 6.53903 26.8158 6.19376 28.2383 6.25482C29.6608 6.31589 31.0364 6.78077 32.2044 7.59508C33.3723 8.40939 34.2842 9.53945 34.8334 10.8531C35.3826 12.1667 35.5464 13.6095 35.3055 15.0128ZM14.2424 21.9419L10.8752 19.9981C10.8576 19.9893 10.8423 19.9763 10.8309 19.9602C10.8195 19.9441 10.8122 19.9254 10.8098 19.9058V10.6071C10.8107 9.18295 11.2173 7.78848 11.9819 6.58696C12.7466 5.38544 13.8377 4.42659 15.1275 3.82264C16.4173 3.21869 17.8524 2.99464 19.2649 3.1767C20.6775 3.35876 22.0089 3.93941 23.1034 4.85067C23.0427 4.88379 22.937 4.94215 22.8668 4.98473L14.9024 9.58517C14.7025 9.69878 14.5366 9.86356 14.4215 10.0626C14.3065 10.2616 14.2466 10.4877 14.2479 10.7175L14.2424 21.9419ZM16.071 17.9991L20.4018 15.4978L24.7325 17.9975V22.9985L20.4018 25.4983L16.071 22.9985V17.9991Z" fill="currentColor"></path>
+        </symbol>
+    </svg>
+    <div class="conversation">
+        <div class="conversation-header">
+            <h1>
+                <a href="https://chatgpt.com/c/66fce9c8-8368-8004-9d0b-b5258e028d8f" target="_blank" rel="noopener noreferrer">Spring Boot Starters Overview</a>
+                <button class="toggle">
+                    <svg class="sun" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <svg class="moon" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+            </h1>
+            <div class="conversation-export">
+                <p>Exported by
+                <a href="https://github.com/pionxzh/chatgpt-exporter">ChatGPT Exporter</a>
+                at 2024-10-02T06:43:18.113Z</p>
+            </div>
+            
+        </div>
+
+        
+<div class="conversation-item">
+    <div class="author user">
+        <img alt="You" />
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>Explain  springboot starters in very simple way.
+Tell why we need to use it, Tell what happens if we dont use it. How it will be used in Real world. What problems it solves. What are common starters , which are helpful starters.
+In a neat and detailed way with code examples and tables if needed for better understanding.
+</p>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="conversation-item">
+    <div class="author GPT-3">
+        <svg width="41" height="41"><use xlink:href="#chatgpt" /></svg>
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <h3>Spring Boot Starters: A Simple Overview</h3>
+<p><strong>What are Spring Boot Starters?</strong></p>
+<p>Spring Boot Starters are a set of convenient dependency descriptors that you can include in your Spring Boot application. They simplify the process of configuring Spring applications by providing pre-defined dependencies that are commonly used together.</p>
+<p>Think of a starter as a bundle that includes all the libraries you need to get started with a specific functionality in your application. Instead of searching for each library and managing its version, you can just include a starter, and it will pull in all necessary dependencies.</p>
+<h4>Why Use Spring Boot Starters?</h4>
+<ol>
+<li>
+<p><strong>Simplified Dependency Management</strong>:</p>
+<ul>
+<li>Starters reduce the complexity of managing dependencies manually.</li>
+<li>They provide a set of well-tested libraries and their compatible versions.</li>
+</ul>
+</li>
+<li>
+<p><strong>Faster Setup</strong>:</p>
+<ul>
+<li>Quickly bootstrap a Spring application without worrying about individual dependencies.</li>
+<li>Focus more on writing business logic rather than configuration.</li>
+</ul>
+</li>
+<li>
+<p><strong>Convention Over Configuration</strong>:</p>
+<ul>
+<li>Encourages best practices and standardized configurations, making it easier to maintain applications.</li>
+</ul>
+</li>
+</ol>
+<h4>What Happens if We Don't Use Starters?</h4>
+<ul>
+<li><strong>Manual Dependency Management</strong>:
+<ul>
+<li>You would have to manually include each dependency your application needs, which can be error-prone and time-consuming.</li>
+</ul>
+</li>
+<li><strong>Version Conflicts</strong>:
+<ul>
+<li>Without starters, you might face compatibility issues with different library versions.</li>
+</ul>
+</li>
+<li><strong>Longer Setup Time</strong>:
+<ul>
+<li>Initializing a project would take significantly longer as you need to figure out which dependencies are needed for your specific use case.</li>
+</ul>
+</li>
+</ul>
+<h3>How to Use Starters in the Real World</h3>
+<p>In a real-world Spring Boot application, you typically define your dependencies in the <code>pom.xml</code> file (for Maven) or <code>build.gradle</code> (for Gradle) file using starters.</p>
+<p><strong>Example using Maven</strong>:</p>
+<pre><code class="language-xml">&#x3C;dependencies>
+    &#x3C;!-- Spring Boot Starter Web: for building web applications -->
+    &#x3C;dependency>
+        &#x3C;groupId>org.springframework.boot&#x3C;/groupId>
+        &#x3C;artifactId>spring-boot-starter-web&#x3C;/artifactId>
+    &#x3C;/dependency>
+    &#x3C;!-- Spring Boot Starter Data JPA: for interacting with databases -->
+    &#x3C;dependency>
+        &#x3C;groupId>org.springframework.boot&#x3C;/groupId>
+        &#x3C;artifactId>spring-boot-starter-data-jpa&#x3C;/artifactId>
+    &#x3C;/dependency>
+    &#x3C;!-- Spring Boot Starter Test: for unit testing -->
+    &#x3C;dependency>
+        &#x3C;groupId>org.springframework.boot&#x3C;/groupId>
+        &#x3C;artifactId>spring-boot-starter-test&#x3C;/artifactId>
+        &#x3C;scope>test&#x3C;/scope>
+    &#x3C;/dependency>
+&#x3C;/dependencies>
+</code></pre>
+<p><strong>Example using Gradle</strong>:</p>
+<pre><code class="language-groovy">dependencies {
+    // Spring Boot Starter Web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    
+    // Spring Boot Starter Data JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    
+    // Spring Boot Starter Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+</code></pre>
+<h3>Problems Spring Boot Starters Solve</h3>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution Provided by Starters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Complex Dependency Management</td>
+<td>Provides pre-defined sets of dependencies</td>
+</tr>
+<tr>
+<td>Manual Configuration</td>
+<td>Offers default configurations that work out of the box</td>
+</tr>
+<tr>
+<td>Compatibility Issues</td>
+<td>Ensures that all included dependencies are compatible with each other</td>
+</tr>
+<tr>
+<td>Long Setup Times</td>
+<td>Reduces the time taken to set up a project</td>
+</tr>
+<tr>
+<td>Lack of Best Practices</td>
+<td>Enforces standardized project structures and configurations</td>
+</tr>
+</tbody>
+</table>
+<h3>Common Spring Boot Starters</h3>
+<p>Here are some of the most commonly used Spring Boot starters:</p>
+<table>
+<thead>
+<tr>
+<th>Starter Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>spring-boot-starter-web</code></td>
+<td>For building web applications (includes Spring MVC, Tomcat, etc.)</td>
+</tr>
+<tr>
+<td><code>spring-boot-starter-data-jpa</code></td>
+<td>For working with JPA and databases (includes Hibernate)</td>
+</tr>
+<tr>
+<td><code>spring-boot-starter-security</code></td>
+<td>For securing your application with Spring Security</td>
+</tr>
+<tr>
+<td><code>spring-boot-starter-test</code></td>
+<td>For testing your application (includes JUnit, Mockito)</td>
+</tr>
+<tr>
+<td><code>spring-boot-starter-thymeleaf</code></td>
+<td>For server-side rendering with Thymeleaf templates</td>
+</tr>
+<tr>
+<td><code>spring-boot-starter-actuator</code></td>
+<td>For monitoring and managing your application</td>
+</tr>
+<tr>
+<td><code>spring-boot-starter-mail</code></td>
+<td>For sending emails using JavaMailSender</td>
+</tr>
+</tbody>
+</table>
+<h3>Helpful Starters</h3>
+<ol>
+<li>
+<p><strong>Spring Boot Starter Web</strong>:</p>
+<ul>
+<li>Helps you create RESTful web services and web applications.</li>
+<li>Automatically configures Tomcat and other required libraries.</li>
+</ul>
+</li>
+<li>
+<p><strong>Spring Boot Starter Data JPA</strong>:</p>
+<ul>
+<li>Simplifies database interactions using JPA.</li>
+<li>Reduces boilerplate code for data access.</li>
+</ul>
+</li>
+<li>
+<p><strong>Spring Boot Starter Security</strong>:</p>
+<ul>
+<li>Secures your application with minimal configuration.</li>
+<li>Provides authentication and authorization features.</li>
+</ul>
+</li>
+</ol>
+<h3>Conclusion</h3>
+<p>Spring Boot Starters are a powerful feature of Spring Boot that greatly simplifies the development process. By using starters, developers can focus on building applications rather than managing configurations and dependencies. Whether you're building a simple web application or a complex microservice, utilizing the appropriate starters can save you time and reduce complexity, allowing you to deliver your projects more efficiently.</p>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="conversation-item">
+    <div class="author user">
+        <img alt="You" />
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>What Happens if We Don&#039;t Use Starters? Show me with example having starter vs not having starter</p>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="conversation-item">
+    <div class="author GPT-3">
+        <svg width="41" height="41"><use xlink:href="#chatgpt" /></svg>
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>To illustrate the differences between using Spring Boot starters and not using them, let’s consider a simple example of a web application that connects to a database. We'll explore how the code and configuration differ when you utilize Spring Boot starters versus when you do not.</p>
+<h3>Example: Creating a Simple RESTful Web Application</h3>
+<h4>Scenario: Using Spring Boot Starters</h4>
+<p>Let’s start by creating a basic RESTful application using the <strong>Spring Boot Starter Web</strong> and <strong>Spring Boot Starter Data JPA</strong>.</p>
+<p><strong>1. Using Starters</strong></p>
+<p><strong>Maven Configuration (<code>pom.xml</code>):</strong></p>
+<pre><code class="language-xml">&#x3C;dependencies>
+    &#x3C;!-- Starter for building web applications -->
+    &#x3C;dependency>
+        &#x3C;groupId>org.springframework.boot&#x3C;/groupId>
+        &#x3C;artifactId>spring-boot-starter-web&#x3C;/artifactId>
+    &#x3C;/dependency>
+    
+    &#x3C;!-- Starter for accessing databases with JPA -->
+    &#x3C;dependency>
+        &#x3C;groupId>org.springframework.boot&#x3C;/groupId>
+        &#x3C;artifactId>spring-boot-starter-data-jpa&#x3C;/artifactId>
+    &#x3C;/dependency>
+    
+    &#x3C;!-- H2 Database for testing purposes -->
+    &#x3C;dependency>
+        &#x3C;groupId>com.h2database&#x3C;/groupId>
+        &#x3C;artifactId>h2&#x3C;/artifactId>
+        &#x3C;scope>runtime&#x3C;/scope>
+    &#x3C;/dependency>
+&#x3C;/dependencies>
+</code></pre>
+<p><strong>Application Class:</strong></p>
+<pre><code class="language-java">import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class MyApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(MyApplication.class, args);
+    }
+}
+</code></pre>
+<p><strong>Entity Class:</strong></p>
+<pre><code class="language-java">import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
+public class Product {
+    @Id
+    @GeneratedValue
+    private Long id;
+    private String name;
+
+    // Getters and Setters
+}
+</code></pre>
+<p><strong>Repository Interface:</strong></p>
+<pre><code class="language-java">import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository&#x3C;Product, Long> {
+}
+</code></pre>
+<p><strong>Controller Class:</strong></p>
+<pre><code class="language-java">import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/products")
+public class ProductController {
+    
+    @Autowired
+    private ProductRepository productRepository;
+
+    @GetMapping
+    public List&#x3C;Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    @PostMapping
+    public Product createProduct(@RequestBody Product product) {
+        return productRepository.save(product);
+    }
+}
+</code></pre>
+<h3>Advantages of Using Starters:</h3>
+<ul>
+<li><strong>Less Boilerplate Code</strong>: You only need to include the starter dependencies in your <code>pom.xml</code>.</li>
+<li><strong>Automatic Configuration</strong>: Spring Boot auto-configures the necessary components (like the embedded server and JPA configuration).</li>
+<li><strong>Rapid Development</strong>: Quickly create REST endpoints and manage database operations without worrying about the underlying configurations.</li>
+</ul>
+<hr>
+<h4>Scenario: Not Using Spring Boot Starters</h4>
+<p>Now, let’s see what it looks like if we don't use starters. Instead, we'll have to manually include all the necessary dependencies.</p>
+<p><strong>1. Without Starters</strong></p>
+<p><strong>Maven Configuration (<code>pom.xml</code>):</strong></p>
+<pre><code class="language-xml">&#x3C;dependencies>
+    &#x3C;!-- Spring Web MVC dependencies -->
+    &#x3C;dependency>
+        &#x3C;groupId>org.springframework&#x3C;/groupId>
+        &#x3C;artifactId>spring-webmvc&#x3C;/artifactId>
+        &#x3C;version>5.3.12&#x3C;/version>
+    &#x3C;/dependency>
+    
+    &#x3C;!-- Spring Data JPA dependencies -->
+    &#x3C;dependency>
+        &#x3C;groupId>org.springframework.data&#x3C;/groupId>
+        &#x3C;artifactId>spring-data-jpa&#x3C;/artifactId>
+        &#x3C;version>2.5.1&#x3C;/version>
+    &#x3C;/dependency>
+    
+    &#x3C;!-- Hibernate (JPA implementation) -->
+    &#x3C;dependency>
+        &#x3C;groupId>org.hibernate&#x3C;/groupId>
+        &#x3C;artifactId>hibernate-core&#x3C;/artifactId>
+        &#x3C;version>5.5.3.Final&#x3C;/version>
+    &#x3C;/dependency>
+    
+    &#x3C;!-- H2 Database -->
+    &#x3C;dependency>
+        &#x3C;groupId>com.h2database&#x3C;/groupId>
+        &#x3C;artifactId>h2&#x3C;/artifactId>
+        &#x3C;scope>runtime&#x3C;/scope>
+    &#x3C;/dependency>
+
+    &#x3C;!-- Spring Context and other necessary dependencies -->
+    &#x3C;dependency>
+        &#x3C;groupId>org.springframework&#x3C;/groupId>
+        &#x3C;artifactId>spring-context&#x3C;/artifactId>
+        &#x3C;version>5.3.12&#x3C;/version>
+    &#x3C;/dependency>
+
+    &#x3C;!-- Additional dependencies for logging, AOP, etc. may be needed -->
+&#x3C;/dependencies>
+</code></pre>
+<p><strong>Application Class:</strong></p>
+<pre><code class="language-java">import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+@Configuration
+@EnableWebMvc
+@ComponentScan(basePackages = "com.example")
+public class MyApplication {
+    public static void main(String[] args) {
+        // Manual setup of Application Context and DispatcherServlet
+    }
+}
+</code></pre>
+<p><strong>Manual Configuration:</strong></p>
+<ul>
+<li>You would also need to create configuration classes for setting up the Entity Manager, DataSource, and other components, which adds more complexity.</li>
+</ul>
+<h3>Disadvantages of Not Using Starters:</h3>
+<ul>
+<li><strong>Complex Configuration</strong>: You have to manage all dependencies and their versions manually.</li>
+<li><strong>More Boilerplate Code</strong>: You end up writing a lot of configuration code just to get started.</li>
+<li><strong>Increased Risk of Compatibility Issues</strong>: Without starters, you might accidentally include incompatible library versions.</li>
+</ul>
+<h3>Summary of Differences</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Using Starters</th>
+<th>Not Using Starters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dependency Management</strong></td>
+<td>Simplified, just include starters</td>
+<td>Manual inclusion of each dependency</td>
+</tr>
+<tr>
+<td><strong>Configuration Complexity</strong></td>
+<td>Auto-configured components</td>
+<td>Extensive manual configurations needed</td>
+</tr>
+<tr>
+<td><strong>Boilerplate Code</strong></td>
+<td>Minimal, focuses on business logic</td>
+<td>High, needs extensive setup</td>
+</tr>
+<tr>
+<td><strong>Development Speed</strong></td>
+<td>Rapid application setup</td>
+<td>Slower due to manual setup</td>
+</tr>
+<tr>
+<td><strong>Risk of Version Conflicts</strong></td>
+<td>Low (well-tested versions)</td>
+<td>High (manual version management)</td>
+</tr>
+</tbody>
+</table>
+<h3>Conclusion</h3>
+<p>Using Spring Boot starters significantly simplifies the development process by reducing complexity and boilerplate code. In contrast, not using starters requires extensive configuration and management, making it more error-prone and time-consuming. This example highlights the benefits of leveraging Spring Boot starters for efficient application development.</p>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="conversation-item">
+    <div class="author user">
+        <img alt="You" />
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>Can you give me a table with a column of having starter and another column if we dont have starter what extra things we have to include if we dont use that specific starter</p>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="conversation-item">
+    <div class="author GPT-3">
+        <svg width="41" height="41"><use xlink:href="#chatgpt" /></svg>
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>Certainly! Here’s a table that outlines various Spring Boot starters, what they simplify when used, and what additional components or configurations you would need to include if you choose not to use those starters.</p>
+<h3>Comparison Table: Using Spring Boot Starters vs. Not Using Starters</h3>
+<table>
+<thead>
+<tr>
+<th>Starter Name</th>
+<th>What It Simplifies</th>
+<th>Additional Components/Configurations Needed if Not Used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>spring-boot-starter-web</code></strong></td>
+<td>- Sets up Spring MVC for web applications.</td>
+<td>- <strong>Spring Web MVC Dependency</strong>: Include <code>spring-webmvc</code> manually.  - <strong>Servlet Configuration</strong>: Manually configure <code>DispatcherServlet</code>.  - <strong>Embedded Server Configuration</strong>: Set up Tomcat or Jetty manually.</td>
+</tr>
+<tr>
+<td><strong><code>spring-boot-starter-data-jpa</code></strong></td>
+<td>- Provides JPA and Hibernate integration.</td>
+<td>- <strong>JPA and Hibernate Dependencies</strong>: Include <code>spring-data-jpa</code> and <code>hibernate-core</code> manually.  - <strong>EntityManager Configuration</strong>: Manually configure <code>EntityManagerFactory</code> and <code>TransactionManager</code>.</td>
+</tr>
+<tr>
+<td><strong><code>spring-boot-starter-security</code></strong></td>
+<td>- Auto-configures Spring Security for authentication and authorization.</td>
+<td>- <strong>Spring Security Dependency</strong>: Include <code>spring-security-core</code> and <code>spring-security-web</code> manually.  - <strong>Security Configuration</strong>: Create custom security configuration classes.</td>
+</tr>
+<tr>
+<td><strong><code>spring-boot-starter-test</code></strong></td>
+<td>- Sets up testing dependencies (JUnit, Mockito).</td>
+<td>- <strong>JUnit and Mockito Dependencies</strong>: Include <code>junit</code> and <code>mockito-core</code> manually.  - <strong>Testing Configuration</strong>: Set up testing support and annotations manually.</td>
+</tr>
+<tr>
+<td><strong><code>spring-boot-starter-thymeleaf</code></strong></td>
+<td>- Configures Thymeleaf template engine.</td>
+<td>- <strong>Thymeleaf Dependency</strong>: Include <code>thymeleaf</code> and <code>thymeleaf-spring5</code> manually.  - <strong>View Resolver Configuration</strong>: Manually set up view resolver beans.</td>
+</tr>
+<tr>
+<td><strong><code>spring-boot-starter-actuator</code></strong></td>
+<td>- Adds endpoints for application monitoring.</td>
+<td>- <strong>Spring Actuator Dependency</strong>: Include <code>spring-boot-actuator</code> manually.  - <strong>Management Server Configuration</strong>: Manually configure management endpoints and security.</td>
+</tr>
+<tr>
+<td><strong><code>spring-boot-starter-mail</code></strong></td>
+<td>- Sets up JavaMailSender for sending emails.</td>
+<td>- <strong>JavaMail Dependency</strong>: Include <code>javax.mail</code> manually.  - <strong>Mail Configuration</strong>: Manually set up mail properties in your application configuration.</td>
+</tr>
+<tr>
+<td><strong><code>spring-boot-starter-validation</code></strong></td>
+<td>- Auto-configures validation (e.g., Hibernate Validator).</td>
+<td>- <strong>Validation Dependency</strong>: Include <code>javax.validation</code> and <code>hibernate-validator</code> manually.  - <strong>Validation Configuration</strong>: Manually set up validation logic.</td>
+</tr>
+</tbody>
+</table>
+<h3>Conclusion</h3>
+<p>Using Spring Boot starters simplifies dependency management and configuration significantly. Without them, you must manually include various dependencies and set up configurations, increasing complexity and the potential for errors. This table provides a clear comparison of what each starter offers and the extra work required if you opt not to use them.</p>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="conversation-item">
+    <div class="author user">
+        <img alt="You" />
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>Few interview questions and answers with explaination on starters ? beginner to tricky</p>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="conversation-item">
+    <div class="author GPT-3">
+        <svg width="41" height="41"><use xlink:href="#chatgpt" /></svg>
+    </div>
+    <div class="conversation-content-wrapper">
+        <div class="conversation-content">
+            <p>Here are some interview questions about Spring Boot starters, ranging from beginner to more advanced (tricky) questions, along with detailed answers and explanations.</p>
+<h3>1. What is a Spring Boot Starter?</h3>
+<p><strong>Answer:</strong>
+A Spring Boot Starter is a dependency descriptor that groups commonly used libraries and their dependencies together for a specific functionality, making it easier to set up a Spring Boot application.</p>
+<p><strong>Explanation:</strong>
+For instance, if you want to create a web application, you can simply add <code>spring-boot-starter-web</code> to your <code>pom.xml</code> or <code>build.gradle</code>. This starter includes all the necessary libraries, such as Spring MVC and an embedded web server (Tomcat by default), saving developers from manually adding each library and ensuring compatibility.</p>
+<h3>2. Why should you use Spring Boot Starters?</h3>
+<p><strong>Answer:</strong>
+Using Spring Boot starters simplifies dependency management, reduces boilerplate code, and helps ensure compatibility between different libraries.</p>
+<p><strong>Explanation:</strong></p>
+<ul>
+<li><strong>Simplified Dependency Management</strong>: Instead of searching for and including each library individually, you can just add a starter, which pulls in all necessary dependencies with compatible versions.</li>
+<li><strong>Reduced Boilerplate Code</strong>: Starters come with sensible defaults and auto-configuration, allowing developers to focus on business logic rather than configuration.</li>
+<li><strong>Consistency and Best Practices</strong>: Starters encourage standardized configurations and best practices, making it easier to maintain applications.</li>
+</ul>
+<h3>3. What happens if you don’t use a specific starter in your Spring Boot application?</h3>
+<p><strong>Answer:</strong>
+If you don’t use a specific starter, you will need to manually include the required dependencies and perform the necessary configurations, which can lead to increased complexity and potential errors.</p>
+<p><strong>Explanation:</strong>
+For example, if you don’t use <code>spring-boot-starter-data-jpa</code>, you would have to include JPA, Hibernate, and other related libraries separately. Additionally, you would need to set up the <code>EntityManagerFactory</code>, <code>DataSource</code>, and transaction management manually, which can lead to version conflicts and misconfigurations.</p>
+<h3>4. Can you name some common Spring Boot starters?</h3>
+<p><strong>Answer:</strong>
+Common Spring Boot starters include:</p>
+<ul>
+<li><code>spring-boot-starter-web</code>: For building web applications.</li>
+<li><code>spring-boot-starter-data-jpa</code>: For integrating with JPA and databases.</li>
+<li><code>spring-boot-starter-security</code>: For adding security features.</li>
+<li><code>spring-boot-starter-test</code>: For unit testing.</li>
+<li><code>spring-boot-starter-thymeleaf</code>: For server-side templating with Thymeleaf.</li>
+</ul>
+<p><strong>Explanation:</strong>
+These starters group libraries commonly used for specific tasks. For example, the <code>spring-boot-starter-web</code> includes Spring MVC and an embedded web server, allowing developers to create RESTful services and web applications efficiently.</p>
+<h3>5. What is the difference between a starter and a dependency in Spring Boot?</h3>
+<p><strong>Answer:</strong>
+A starter is a special kind of dependency that groups a set of related dependencies together for a specific functionality, while a regular dependency is just a single library or module.</p>
+<p><strong>Explanation:</strong></p>
+<ul>
+<li><strong>Starters</strong>: They simplify dependency management by bundling related libraries. For example, <code>spring-boot-starter-data-jpa</code> includes dependencies like Spring Data JPA and Hibernate.</li>
+<li><strong>Dependencies</strong>: A dependency refers to any library or module that your application requires to run. You can add dependencies individually, but doing so can lead to version management issues and configuration complexity.</li>
+</ul>
+<h3>6. How do Spring Boot starters support “Convention over Configuration”?</h3>
+<p><strong>Answer:</strong>
+Spring Boot starters provide sensible default configurations that work out of the box, reducing the need for manual configuration and allowing developers to get started quickly.</p>
+<p><strong>Explanation:</strong>
+For instance, when you use <code>spring-boot-starter-web</code>, it automatically configures an embedded web server and sets up Spring MVC. You don’t need to specify configurations explicitly unless you want to customize them. This approach helps speed up development and reduces boilerplate code.</p>
+<h3>7. Explain the role of <code>spring-boot-starter-actuator</code> in a Spring Boot application.</h3>
+<p><strong>Answer:</strong>
+The <code>spring-boot-starter-actuator</code> starter adds production-ready features to your application, allowing you to monitor and manage it via HTTP endpoints or JMX.</p>
+<p><strong>Explanation:</strong>
+With this starter, you get endpoints such as <code>/actuator/health</code>, which provides information about the application's health, and <code>/actuator/info</code>, which displays application metadata. This is useful for operational tasks, performance monitoring, and troubleshooting without needing to write additional code.</p>
+<h3>8. Can you provide an example of how to create a custom starter in Spring Boot?</h3>
+<p><strong>Answer:</strong>
+Yes! Creating a custom starter involves packaging your dependencies and auto-configuration into a separate module. Here's a simplified process:</p>
+<ol>
+<li><strong>Create a New Module</strong>: Set up a new Maven or Gradle project.</li>
+<li><strong>Add Dependencies</strong>: Include necessary libraries in the <code>pom.xml</code> or <code>build.gradle</code>.</li>
+<li><strong>Create Auto-Configuration Class</strong>: Define a configuration class with the <code>@Configuration</code> annotation that sets up your beans.</li>
+<li><strong>Add <code>spring.factories</code> File</strong>: Create a <code>spring.factories</code> file under <code>src/main/resources/META-INF</code> and specify your auto-configuration class.</li>
+</ol>
+<p><strong>Example of Auto-Configuration Class:</strong></p>
+<pre><code class="language-java">import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class MyCustomStarterConfig {
+    @Bean
+    public MyService myService() {
+        return new MyService();
+    }
+}
+</code></pre>
+<p><strong>Explanation:</strong>
+Custom starters allow you to encapsulate specific functionality or configurations that can be reused across different Spring Boot applications, promoting code reuse and consistency.</p>
+<h3>9. How do you troubleshoot issues related to Spring Boot starters?</h3>
+<p><strong>Answer:</strong>
+To troubleshoot issues with Spring Boot starters, you can follow these steps:</p>
+<ul>
+<li><strong>Check Dependency Versions</strong>: Ensure that the versions of the included dependencies are compatible.</li>
+<li><strong>Review Auto-Configuration Reports</strong>: Use the <code>/actuator/conditions</code> endpoint to see which configurations are being applied and why some may not be.</li>
+<li><strong>Examine Logs</strong>: Enable debug logging to see more detailed information about the application startup and configuration processes.</li>
+<li><strong>Test Configuration</strong>: Isolate and test individual components to identify which starter or configuration may be causing issues.</li>
+</ul>
+<p><strong>Explanation:</strong>
+Troubleshooting can often involve understanding how Spring Boot auto-configures components based on the included starters and their dependencies. Keeping an eye on logs and configuration conditions can greatly help in diagnosing problems.</p>
+<h3>10. What are some common pitfalls when using Spring Boot starters?</h3>
+<p><strong>Answer:</strong>
+Common pitfalls include:</p>
+<ul>
+<li><strong>Overusing Starters</strong>: Including too many starters can lead to unnecessary bloat and performance issues.</li>
+<li><strong>Ignoring Starter Versions</strong>: Not managing versions properly can result in incompatibility between libraries.</li>
+<li><strong>Customizing Too Much</strong>: While Spring Boot provides sensible defaults, developers may sometimes over-customize configurations, which can lead to confusion or conflicts.</li>
+</ul>
+<p><strong>Explanation:</strong>
+Being aware of these pitfalls helps ensure that you use Spring Boot starters effectively without compromising performance or maintainability. Striking a balance between using starters and customizing configurations is key to leveraging the benefits of Spring Boot.</p>
+<p>These questions and answers cover a range of topics related to Spring Boot starters, from fundamental concepts to more advanced considerations, helping candidates demonstrate their understanding of this important aspect of Spring Boot development.</p>
+        </div>
+    </div>
+    
+</div>
+    </div>
+
+
+    <script>
+        function toggleDarkMode(mode) {
+            const html = document.querySelector('html')
+            const isDarkMode = html.getAttribute('data-theme') === 'dark'
+            const newMode = mode || (isDarkMode ? 'light' : 'dark')
+            if (newMode !== 'dark' && newMode !== 'light') return
+            html.setAttribute('data-theme', newMode)
+
+            const url = new URL(window.location)
+            url.searchParams.set('theme', newMode)
+            window.history.replaceState({}, '', url)
+        }
+
+        // Support for ?theme=dark
+        const urlParams = new URLSearchParams(window.location.search)
+        const theme = urlParams.get('theme')
+        if (theme) toggleDarkMode(theme)
+
+        document.querySelector('.toggle').addEventListener('click', () => toggleDarkMode())
+    </script>
+</body>
+
+</html>

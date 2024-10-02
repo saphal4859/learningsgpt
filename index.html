@@ -91,9 +91,9 @@
 
       /* Main content */
       .content {
-        margin-left: 260px;
+    margin-left: 260px;
         padding: 20px;
-      }
+}
 
       .content h1 {
         color: #333;
@@ -102,7 +102,7 @@
       /* Search Box */
       .search-container {
         float: right;
-        margin-top: 10px;
+        margin-bottom: 10px;
       }
 
       .search-container input {
@@ -179,6 +179,24 @@
       .category-content a {
         user-select: none;
       }
+      .main-heading {
+    font-size: 2.5rem; /* Slightly reduce font size */
+    font-weight: bold;
+    color: #2980b9;
+    text-align: center;
+    margin-top: 10px; /* Reduce top margin */
+    margin-bottom: 10px; /* Reduce bottom margin */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    letter-spacing: 1px; /* Slight letter spacing */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: transform 0.3s ease;
+}
+
+.main-heading:hover {
+    transform: scale(1.05);
+    text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
     </style>
   </head>
   <body>
@@ -224,7 +242,7 @@
       </div>
       <div class="category-content" id="category4">
         <a href="./ChatGPT-Auto_configuration.html" target="content-frame">Auto-Configuration</a>
-        <a href="./starters.html" target="content-frame">Spring Boot Starters</a>
+        <a href="./ChatGPT-Spring_Boot_Starters_Overview.html" target="content-frame">Spring Boot Starters</a>
         <a href="./embedded_servers.html" target="content-frame">Embedded Servers</a>
         <a href="./actuator.html" target="content-frame">Actuator</a>
         <a href="./property_configuration.html" target="content-frame">Property Configuration</a>
@@ -329,19 +347,18 @@
 
     <!-- Main content -->
     <div class="content">
-      <h1>Welcome to My Conversations Archive</h1>
+      <h1 class="main-heading">Learnings GPT - SPRING BOOT</h1>
       <div class="search-container">
-        <input
-          type="text"
-          id="search-input"
-          placeholder="Search..."
-          onkeyup="performSearch()"
-        />
-        <div id="suggestions" class="suggestions"></div>
+          <input
+              type="text"
+              id="search-input"
+              placeholder="Search..."
+              onkeyup="performSearch()"
+          />
+          <div id="suggestions" class="suggestions"></div>
       </div>
-      <p>Select a conversation from the categories on the left.</p>
       <iframe name="content-frame" id="content-frame" src=""></iframe>
-    </div>
+  </div>  
 
     <script>
       function toggleCategory(categoryId) {
