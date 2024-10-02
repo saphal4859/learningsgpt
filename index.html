@@ -8,6 +8,7 @@
       * {
         box-sizing: border-box;
       }
+
       body {
         margin: 0;
         font-family: "Arial", sans-serif;
@@ -21,11 +22,13 @@
         position: fixed;
         top: 0;
         left: 0;
-        background-color: #2c3e50;
-        padding-top: 20px;
+        background-color: #34495e;
+        padding: 20px 0;
         overflow-x: hidden;
-        box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out;
       }
+
       .sidebar h2 {
         color: #ecf0f1;
         text-align: center;
@@ -33,36 +36,41 @@
         margin-bottom: 20px;
         font-weight: 600;
       }
-      .sidebar .home-link,
-      .sidebar .category {
-        padding: 15px;
+
+      .sidebar .home-link {
+        padding: 15px 20px;
         font-size: 18px;
         color: #ecf0f1;
         cursor: pointer;
         text-align: left;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
         border-radius: 5px;
         transition: background 0.3s, transform 0.3s;
       }
-      .sidebar .home-link:hover,
-      .sidebar .category:hover {
-        background-color: #34495e;
+
+      .sidebar .home-link:hover {
+        background-color: #1abc9c; /* New hover color */
         transform: translateX(5px);
       }
 
-      /* Icons for better UX */
-      .sidebar .home-link:before,
-      .sidebar .category:before {
-        content: "📘"; /* Book icon for home */
-        margin-right: 10px;
+      /* Categories */
+      .category {
+        padding: 15px 20px;
+        font-size: 18px;
+        color: #ecf0f1;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background 0.3s, transform 0.3s;
       }
-      
 
+      .category:hover {
+        background-color: #1abc9c; /* New hover color */
+        transform: translateX(5px);
+      }
+
+      /* Subcategories */
       .category-content {
         display: none;
-        background-color: #34495e;
+        background-color: #575757; /* Subcategory background */
         margin-top: 5px;
         border-radius: 5px;
       }
@@ -76,19 +84,19 @@
         border-radius: 5px;
         transition: background 0.3s;
       }
-      .category-content a:hover,
-      .category-content a:focus {
-        color: white; /* Text color on hover and focus */
-        background-color: #444; /* Optional: Change background color on hover and focus for better visibility */
+
+      .category-content a:hover {
+        background-color: #1abc9c; /* Hover color for links */
       }
+
       /* Main content */
       .content {
         margin-left: 260px;
         padding: 20px;
       }
+
       .content h1 {
         color: #333;
-        display: inline-block;
       }
 
       /* Search Box */
@@ -96,6 +104,7 @@
         float: right;
         margin-top: 10px;
       }
+
       .search-container input {
         width: 200px;
         padding: 8px;
@@ -117,36 +126,14 @@
         overflow-y: auto;
         right: 0;
       }
+
       .suggestions div {
         padding: 10px;
         cursor: pointer;
       }
+
       .suggestions div:hover {
         background-color: #575757;
-      }
-
-      /* Responsive for smaller screens */
-      @media screen and (max-width: 768px) {
-        .sidebar {
-          width: 100px;
-          padding-top: 15px;
-        }
-        .sidebar h2 {
-          font-size: 18px;
-        }
-        .category-content {
-          padding: 0;
-        }
-        .sidebar .category {
-          padding: 10px;
-          font-size: 16px;
-        }
-        .category-content a {
-          padding: 10px 20px;
-        }
-        .content {
-          margin-left: 120px;
-        }
       }
 
       /* Iframe styling */
@@ -158,16 +145,39 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
       }
+
+      /* Responsive for smaller screens */
+      @media screen and (max-width: 768px) {
+        .sidebar {
+          width: 100px;
+          padding-top: 15px;
+        }
+
+        .sidebar h2 {
+          font-size: 18px;
+        }
+
+        .category {
+          padding: 10px;
+          font-size: 16px;
+        }
+
+        .category-content a {
+          padding: 5px 20px;
+        }
+
+        .content {
+          margin-left: 120px;
+        }
+      }
+
       /* Prevent text selection in sidebar */
       .sidebar,
       .sidebar h2,
       .home-link,
       .category,
       .category-content a {
-        -webkit-user-select: none; /* Chrome/Safari */
-        -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* IE/Edge */
-        user-select: none; /* Non-prefixed version, supported by modern browsers */
+        user-select: none;
       }
     </style>
   </head>
@@ -175,250 +185,147 @@
     <!-- Sidebar with categories -->
     <div class="sidebar">
       <h2>Conversations Archive</h2>
-
+    
       <!-- Home link -->
-      <div class="home-link" onclick="loadHome()">Home</div>
-
+      <div class="home-link" onclick="loadHome()">🏠 Home</div>
+    
       <!-- Spring Basics -->
       <div class="category" onclick="toggleCategory('category1')">
-        Spring Basics
+        🌱 Spring Basics
       </div>
       <div class="category-content" id="category1">
-        <a href="./spring_vs_springboot.html" target="content-frame"
-          >Spring vs Spring Boot</a
-        >
-        <a href="./ChatGPT-Why_Use_Spring_Boot.html" target="content-frame"
-          >Why Springboot/Spring</a
-        >
+        <a href="./spring_vs_springboot.html" target="content-frame">Spring vs Spring Boot</a>
+        <a href="./ChatGPT-Why_Use_Spring_Boot.html" target="content-frame">Why Springboot/Spring</a>
       </div>
-
+    
       <!-- Core Concepts -->
       <div class="category" onclick="toggleCategory('category2')">
-        Core Concepts
+        📚 Core Concepts
       </div>
       <div class="category-content" id="category2">
-        <a href="./ChatGPT-Spring_Boot_Dependency_Injection.html" target="content-frame"
-          >Dependency Injection</a
-        >
-        <a href="./ChatGPT-IoC_and_Dependency_Injection.html" target="content-frame"
-          >Inversion of Control (IoC)</a
-        >
-        <a href="./ChatGPT-Spring_Bean_Lifecycle.html" target="content-frame"
-          >Beans and Bean Scopes</a
-        >
+        <a href="./ChatGPT-Spring_Boot_Dependency_Injection.html" target="content-frame">Dependency Injection</a>
+        <a href="./ChatGPT-IoC_and_Dependency_Injection.html" target="content-frame">Inversion of Control (IoC)</a>
+        <a href="./ChatGPT-Spring_Bean_Lifecycle.html" target="content-frame">Beans and Bean Scopes</a>
       </div>
-
+    
       <!-- Configuration -->
       <div class="category" onclick="toggleCategory('category3')">
-        Configuration
+        ⚙️ Configuration
       </div>
       <div class="category-content" id="category3">
-        <a href="./ChatGPT-XML_vs_Annotation_Configuration.html" target="content-frame"
-          >	XML vs Annotation based configuration
-          </a
-        >
-        <a href="./ChatGPT-Component_Scan_in_Spring_Boot.html" target="content-frame"
-          >@ComponentScan</a
-        >
-        <a href="./ChatGPT-Autowired_and_Component_Overview.html" target="content-frame"
-          >@Autowire and @Component</a
-        >
+        <a href="./ChatGPT-XML_vs_Annotation_Configuration.html" target="content-frame">XML vs Annotation based configuration</a>
+        <a href="./ChatGPT-Component_Scan_in_Spring_Boot.html" target="content-frame">@ComponentScan</a>
+        <a href="./ChatGPT-Autowired_and_Component_Overview.html" target="content-frame">@Autowire and @Component</a>
       </div>
-
+    
       <!-- Spring Boot -->
       <div class="category" onclick="toggleCategory('category4')">
-        Spring Boot
+        🛠️ Spring Boot
       </div>
       <div class="category-content" id="category4">
-      
-        <a href="./ChatGPT-Auto_configuration.html" target="content-frame"
-          >Auto-Configuration</a
-        >
-        <a href="./starters.html" target="content-frame"
-          >Spring Boot Starters</a
-        >
-        <a href="./embedded_servers.html" target="content-frame"
-          >Embedded Servers</a
-        >
+        <a href="./ChatGPT-Auto_configuration.html" target="content-frame">Auto-Configuration</a>
+        <a href="./starters.html" target="content-frame">Spring Boot Starters</a>
+        <a href="./embedded_servers.html" target="content-frame">Embedded Servers</a>
         <a href="./actuator.html" target="content-frame">Actuator</a>
-        <a href="./property_configuration.html" target="content-frame"
-          >Property Configuration</a
-        >
-        <a href="./profiles.html" target="content-frame"
-          >Profiles (Environment-specific config)</a
-        >
+        <a href="./property_configuration.html" target="content-frame">Property Configuration</a>
+        <a href="./profiles.html" target="content-frame">Profiles (Environment-specific config)</a>
       </div>
-
+    
       <!-- Spring MVC -->
       <div class="category" onclick="toggleCategory('category5')">
-        Spring MVC
+        🌐 Spring MVC
       </div>
       <div class="category-content" id="category5">
-        <a href="./mvc_architecture.html" target="content-frame"
-          >MVC Architecture</a
-        >
-        <a href="./dispatcher_servlet.html" target="content-frame"
-          >Dispatcher Servlet</a
-        >
-        <a href="./path_variables.html" target="content-frame"
-          >Path Variables & Request Parameters</a
-        >
+        <a href="./mvc_architecture.html" target="content-frame">MVC Architecture</a>
+        <a href="./dispatcher_servlet.html" target="content-frame">Dispatcher Servlet</a>
+        <a href="./path_variables.html" target="content-frame">Path Variables & Request Parameters</a>
         <a href="./controller.html" target="content-frame">@Controller</a>
-        <a href="./request_mapping.html" target="content-frame"
-          >@RequestMapping Annotations</a
-        >
-        <a href="./data_binding_validation.html" target="content-frame"
-          >Data Binding and Validation</a
-        >
-        <a href="./view_technologies.html" target="content-frame"
-          >View Technologies (JSP, Thymeleaf)</a
-        >
-        <a href="./filters_interceptors.html" target="content-frame"
-          >Filters and Interceptors</a
-        >
+        <a href="./request_mapping.html" target="content-frame">@RequestMapping Annotations</a>
+        <a href="./data_binding_validation.html" target="content-frame">Data Binding and Validation</a>
+        <a href="./view_technologies.html" target="content-frame">View Technologies (JSP, Thymeleaf)</a>
+        <a href="./filters_interceptors.html" target="content-frame">Filters and Interceptors</a>
       </div>
-
+    
       <!-- RESTful Services -->
       <div class="category" onclick="toggleCategory('category6')">
-        RESTful Services
+        🌍 RESTful Services
       </div>
       <div class="category-content" id="category6">
-        <a href="./rest_principles.html" target="content-frame"
-          >REST Principles</a
-        >
+        <a href="./rest_principles.html" target="content-frame">REST Principles</a>
         <a href="./api_design.html" target="content-frame">REST API Design</a>
-        <a href="./http_methods.html" target="content-frame"
-          >HTTP Methods (GET, POST, PUT, DELETE)</a
-        >
-        <a href="./rest_controller.html" target="content-frame"
-          >@RestController</a
-        >
-        <a href="./request_response_marshalling.html" target="content-frame"
-          >Request and Response Marshalling</a
-        >
-        <a href="./content_negotiation.html" target="content-frame"
-          >Content Type Negotiation</a
-        >
+        <a href="./http_methods.html" target="content-frame">HTTP Methods (GET, POST, PUT, DELETE)</a>
+        <a href="./rest_controller.html" target="content-frame">@RestController</a>
+        <a href="./request_response_marshalling.html" target="content-frame">Request and Response Marshalling</a>
+        <a href="./content_negotiation.html" target="content-frame">Content Type Negotiation</a>
         <a href="./hateoas.html" target="content-frame">HATEOAS</a>
-        <a href="./swagger_openapi.html" target="content-frame"
-          >Swagger/OpenAPI Documentation</a
-        >
-        <a
-          href="./exception_handler_controller_advice.html"
-          target="content-frame"
-          >@ExceptionHandler & @ControllerAdvice</a
-        >
+        <a href="./swagger_openapi.html" target="content-frame">Swagger/OpenAPI Documentation</a>
+        <a href="./exception_handler_controller_advice.html" target="content-frame">@ExceptionHandler & @ControllerAdvice</a>
       </div>
-
+    
       <!-- Database Access -->
       <div class="category" onclick="toggleCategory('category7')">
-        Database Access
+        🗄️ Database Access
       </div>
       <div class="category-content" id="category7">
         <a href="./jdbc.html" target="content-frame">JDBC</a>
-        <a href="./jpa.html" target="content-frame"
-          >Java Persistence API (JPA)</a
-        >
-        <a href="./hibernate_orm.html" target="content-frame"
-          >Hibernate and other ORMs</a
-        >
-        <a href="./entity_mappings.html" target="content-frame"
-          >Entity Mappings with Annotations</a
-        >
-        <a href="./repositories_crud.html" target="content-frame"
-          >Repositories and CRUD Operations</a
-        >
-        <a href="./custom_queries.html" target="content-frame"
-          >Custom Queries (SQL, HQL, JPQL)</a
-        >
-        <a href="./transactional_management.html" target="content-frame"
-          >Transactional Management</a
-        >
-        <a href="./connection_pooling.html" target="content-frame"
-          >Connection Pooling (HikariCP)</a
-        >
+        <a href="./jpa.html" target="content-frame">Java Persistence API (JPA)</a>
+        <a href="./hibernate_orm.html" target="content-frame">Hibernate and other ORMs</a>
+        <a href="./entity_mappings.html" target="content-frame">Entity Mappings with Annotations</a>
+        <a href="./repositories_crud.html" target="content-frame">Repositories and CRUD Operations</a>
+        <a href="./custom_queries.html" target="content-frame">Custom Queries (SQL, HQL, JPQL)</a>
+        <a href="./transactional_management.html" target="content-frame">Transactional Management</a>
+        <a href="./connection_pooling.html" target="content-frame">Connection Pooling (HikariCP)</a>
         <a href="./caching.html" target="content-frame">Caching</a>
       </div>
-
+    
       <!-- Spring Security -->
       <div class="category" onclick="toggleCategory('category8')">
-        Spring Security
+        🔒 Spring Security
       </div>
       <div class="category-content" id="category8">
-        <a href="./authentication.html" target="content-frame"
-          >Authentication</a
-        >
+        <a href="./authentication.html" target="content-frame">Authentication</a>
         <a href="./authorization.html" target="content-frame">Authorization</a>
-        <a href="./security_context.html" target="content-frame"
-          >Security Context</a
-        >
-        <a href="./security_filter_chain.html" target="content-frame"
-          >Security Filter Chain</a
-        >
-        <a href="./hashing_password_encoding.html" target="content-frame"
-          >Hashing and Password Encoding</a
-        >
-        <a href="./method_level_security.html" target="content-frame"
-          >Method-Level Security</a
-        >
+        <a href="./security_context.html" target="content-frame">Security Context</a>
+        <a href="./security_filter_chain.html" target="content-frame">Security Filter Chain</a>
+        <a href="./hashing_password_encoding.html" target="content-frame">Hashing and Password Encoding</a>
+        <a href="./method_level_security.html" target="content-frame">Method-Level Security</a>
         <a href="./jwt.html" target="content-frame">JSON Web Token (JWT)</a>
         <a href="./oauth2.html" target="content-frame">OAuth2</a>
-        <a href="./openid_connect.html" target="content-frame"
-          >OpenID Connect</a
-        >
+        <a href="./openid_connect.html" target="content-frame">OpenID Connect</a>
         <a href="./csrf_cors.html" target="content-frame">CSRF and CORS</a>
       </div>
-
+    
       <!-- Spring AOP -->
       <div class="category" onclick="toggleCategory('category9')">
-        Spring AOP
+        🎭 Spring AOP
       </div>
       <div class="category-content" id="category9">
-        <a href="./cross_cutting_concerns.html" target="content-frame"
-          >Cross-Cutting Concerns</a
-        >
+        <a href="./cross_cutting_concerns.html" target="content-frame">Cross-Cutting Concerns</a>
         <a href="./aspect.html" target="content-frame">Aspect</a>
-        <a href="./advice_types.html" target="content-frame"
-          >Advice and Advice Types</a
-        >
-        <a href="./pointcut_expressions.html" target="content-frame"
-          >Pointcut Expressions</a
-        >
+        <a href="./advice_types.html" target="content-frame">Advice and Advice Types</a>
+        <a href="./pointcut_expressions.html" target="content-frame">Pointcut Expressions</a>
         <a href="./aop_proxies.html" target="content-frame">AOP Proxies</a>
       </div>
-
+    
       <!-- Microservices (Spring Cloud) -->
       <div class="category" onclick="toggleCategory('category10')">
-        Microservices (Spring Cloud)
+        ☁️ Microservices (Spring Cloud)
       </div>
       <div class="category-content" id="category10">
-        <a href="./microservices_architecture.html" target="content-frame"
-          >Microservices Architecture</a
-        >
+        <a href="./microservices_architecture.html" target="content-frame">Microservices Architecture</a>
         <a href="./spring_cloud.html" target="content-frame">Spring Cloud</a>
-        <a href="./service_discovery.html" target="content-frame"
-          >Service Discovery</a
-        >
-        <a href="./api_gateway.html" target="content-frame"
-          >API Gateway and Load Balancing</a
-        >
-        <a href="./resiliency_patterns.html" target="content-frame"
-          >Resiliency Patterns</a
-        >
-        <a href="./distributed_configuration.html" target="content-frame"
-          >Distributed Configuration and Tracing</a
-        >
-        <a href="./distributed_transactions.html" target="content-frame"
-          >Distributed Transactions</a
-        >
+        <a href="./service_discovery.html" target="content-frame">Service Discovery</a>
+        <a href="./api_gateway.html" target="content-frame">API Gateway and Load Balancing</a>
+        <a href="./resiliency_patterns.html" target="content-frame">Resiliency Patterns</a>
+        <a href="./distributed_configuration.html" target="content-frame">Distributed Configuration and Tracing</a>
+        <a href="./distributed_transactions.html" target="content-frame">Distributed Transactions</a>
         <a href="./service_mesh.html" target="content-frame">Service Mesh</a>
-        <a href="./event_driven_architecture.html" target="content-frame"
-          >Event-Driven Architecture</a
-        >
+        <a href="./event_driven_architecture.html" target="content-frame">Event-Driven Architecture</a>
       </div>
-
+    
       <!-- More categories go here -->
     </div>
+    
 
     <!-- Main content -->
     <div class="content">
@@ -447,9 +354,10 @@
       }
 
       function loadHome() {
-        const iframe = document.getElementById("content-frame");
-        iframe.src = ""; // Set to an empty string or a default home page if you have one
-      }
+    // Assuming you load this home page in the same frame.
+    document.getElementById('content-frame').src = 'home.html'; // Change to the path of your home page
+}
+
 
       // Load default content on page load
       window.onload = loadHome;

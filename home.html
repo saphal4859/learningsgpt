@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f4f8; /* Light background color */
+        color: #333;
+      }
+      .home-container {
+    width: 90%; /* Set width to 90% of the viewport width */
+    max-width: 100%; /* Ensure it does not exceed 100% of the viewport width */
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #ffffff; /* White background for the container */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+
+
+      .home-header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .home-header h1 {
+        font-size: 2.5em;
+        color: #2980b9; /* Use your preferred color */
+      }
+
+      .home-content {
+        margin-bottom: 30px;
+      }
+
+      .intro,
+      .featured,
+      .call-to-action {
+        margin-bottom: 30px;
+      }
+
+      .intro h2,
+      .featured h2,
+      .call-to-action h2 {
+        color: #2980b9; /* Use your preferred color */
+      }
+
+      .featured {
+        display: flex;
+        flex-wrap: wrap; /* Allow items to wrap */
+        gap: 20px; /* Space between boxes */
+        margin-top: 10px; /* Space between heading and boxes */
+      }
+
+      .category-box {
+    flex: 1 1 calc(20% - 20px); /* 5 boxes per row */
+    border: 1px solid #2980b9; /* Border color */
+    border-radius: 8px; /* Rounded corners */
+    padding: 15px;
+    background-color: #f9f9f9; /* Light background for boxes */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for hover effect */
+}
+
+
+      .category-box:hover {
+        transform: translateY(-5px); /* Lift effect */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Increased shadow on hover */
+      }
+
+      .category-box h3 {
+        color: #2980b9; /* Use your preferred color */
+        margin-bottom: 10px;
+      }
+
+      .category-box ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .category-box li {
+        margin: 5px 0;
+      }
+
+      .category-box a {
+        text-decoration: none;
+        color: #2980b9; /* Use your preferred color */
+        transition: color 0.3s;
+      }
+
+      .category-box a:hover {
+        color: #1f6397; /* Darker shade on hover */
+      }
+      .category-box li a {
+        display: block; /* Make the link a block element for full clickable area */
+        padding: 2px; /* Add padding for better spacing */
+        border-radius: 5px; /* Rounded corners */
+        transition: background-color 0.3s, color 0.3s, font-weight 0.3s; /* Smooth transitions */
+      }
+
+      .category-box li a:hover {
+        background-color: #2980b9; /* Highlight background color on hover */
+        color: white; /* Change text color on hover */
+        font-weight: bold; /* Make the text bold on hover */
+      }
+
+      .call-to-action {
+        text-align: center;
+      }
+
+      .call-to-action button {
+        background-color: #2980b9; /* Use your preferred color */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1em;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .call-to-action button:hover {
+        background-color: #1f6397; /* Darker shade on hover */
+      }
+
+      .home-footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.9em;
+        color: #666;
+      }
+
+      /* Responsive styles */
+      @media (max-width: 768px) {
+        .category-box {
+          flex: 1 1 calc(45% - 20px); /* 2 boxes per row on smaller screens */
+        }
+      }
+
+      @media (max-width: 480px) {
+        .category-box {
+          flex: 1 1 100%; /* 1 box per row on very small screens */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="home-container">
+      <header class="home-header">
+        <h1>Welcome to the Conversations Archive!</h1>
+        <p>Your go-to resource for Spring framework interview preparation.</p>
+        <p>Featured by CHAT GPT</p>
+      </header>
+
+      <main class="home-content">
+        <section class="featured">
+          <h2 style="flex-basis: 100%; text-align: left; margin-bottom: 10px">
+            Featured Topics
+          </h2>
+          <!-- Ensure this is on its own row -->
+
+          <!-- Category 1: Spring Basics -->
+          <div class="category-box">
+            <h3>Spring Basics</h3>
+            <ul>
+              <li>
+                <a href="./spring_vs_springboot.html">Spring vs Spring Boot</a>
+              </li>
+              <li>
+                <a href="./ChatGPT-Why_Use_Spring_Boot.html">Why Spring Boot</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 2: Core Concepts -->
+          <div class="category-box">
+            <h3>Core Concepts</h3>
+            <ul>
+              <li>
+                <a href="./ChatGPT-Spring_Boot_Dependency_Injection.html"
+                  >Dependency Injection</a
+                >
+              </li>
+              <li>
+                <a href="./ChatGPT-IoC_and_Dependency_Injection.html"
+                  >Inversion of Control (IoC)</a
+                >
+              </li>
+              <li>
+                <a href="./ChatGPT-Spring_Bean_Lifecycle.html"
+                  >Beans and Bean Scopes</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 3: Configuration -->
+          <div class="category-box">
+            <h3>Configuration</h3>
+            <ul>
+              <li>
+                <a href="./ChatGPT-XML_vs_Annotation_Configuration.html"
+                  >XML vs Annotation Configuration</a
+                >
+              </li>
+              <li>
+                <a href="./ChatGPT-Component_Scan_in_Spring_Boot.html"
+                  >@ComponentScan</a
+                >
+              </li>
+              <li>
+                <a href="./ChatGPT-Autowired_and_Component_Overview.html"
+                  >@Autowire and @Component</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 4: Spring Boot -->
+          <div class="category-box">
+            <h3>Spring Boot</h3>
+            <ul>
+              <li>
+                <a href="./ChatGPT-Auto_configuration.html"
+                  >Auto-Configuration</a
+                >
+              </li>
+              <li><a href="./starters.html">Spring Boot Starters</a></li>
+              <li><a href="./embedded_servers.html">Embedded Servers</a></li>
+              <li><a href="./actuator.html">Actuator</a></li>
+              <li>
+                <a href="./property_configuration.html"
+                  >Property Configuration</a
+                >
+              </li>
+              <li>
+                <a href="./profiles.html"
+                  >Profiles (Environment-specific config)</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 5: Spring MVC -->
+          <div class="category-box">
+            <h3>Spring MVC</h3>
+            <ul>
+              <li><a href="./mvc_architecture.html">MVC Architecture</a></li>
+              <li>
+                <a href="./dispatcher_servlet.html">Dispatcher Servlet</a>
+              </li>
+              <li>
+                <a href="./path_variables.html"
+                  >Path Variables & Request Parameters</a
+                >
+              </li>
+              <li><a href="./controller.html">@Controller</a></li>
+              <li>
+                <a href="./request_mapping.html">@RequestMapping Annotations</a>
+              </li>
+              <li>
+                <a href="./data_binding.html">Data Binding and Validation</a>
+              </li>
+              <li>
+                <a href="./view_technologies.html"
+                  >View Technologies (JSP, Thymeleaf)</a
+                >
+              </li>
+              <li>
+                <a href="./filters_interceptors.html"
+                  >Filters and Interceptors</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 6: RESTful Services -->
+          <div class="category-box">
+            <h3>RESTful Services</h3>
+            <ul>
+              <li><a href="./rest_principles.html">REST Principles</a></li>
+              <li><a href="./api_design.html">REST API Design</a></li>
+              <li>
+                <a href="./http_methods.html"
+                  >HTTP Methods (GET, POST, PUT, DELETE)</a
+                >
+              </li>
+              <li><a href="./rest_controller.html">@RestController</a></li>
+              <li>
+                <a href="./request_response_marshalling.html"
+                  >Request and Response Marshalling</a
+                >
+              </li>
+              <li>
+                <a href="./content_type_negotiation.html"
+                  >Content Type Negotiation</a
+                >
+              </li>
+              <li><a href="./hateoas.html">HATEOAS</a></li>
+              <li>
+                <a href="./swagger_openapi.html"
+                  >Swagger/OpenAPI Documentation</a
+                >
+              </li>
+              <li>
+                <a href="./exception_handler.html"
+                  >@ExceptionHandler & @ControllerAdvice</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 7: Database Access -->
+          <div class="category-box">
+            <h3>Database Access</h3>
+            <ul>
+              <li><a href="./jdbc.html">JDBC</a></li>
+              <li><a href="./jpa.html">Java Persistence API (JPA)</a></li>
+              <li><a href="./hibernate.html">Hibernate and other ORMs</a></li>
+              <li>
+                <a href="./entity_mappings.html"
+                  >Entity Mappings with Annotations</a
+                >
+              </li>
+              <li>
+                <a href="./repositories_crud.html"
+                  >Repositories and CRUD Operations</a
+                >
+              </li>
+              <li>
+                <a href="./custom_queries.html"
+                  >Custom Queries (SQL, HQL, JPQL)</a
+                >
+              </li>
+              <li>
+                <a href="./transactional_management.html"
+                  >Transactional Management</a
+                >
+              </li>
+              <li>
+                <a href="./connection_pooling.html"
+                  >Connection Pooling (HikariCP)</a
+                >
+              </li>
+              <li><a href="./caching.html">Caching</a></li>
+            </ul>
+          </div>
+
+          <!-- Category 8: Spring Security -->
+          <div class="category-box">
+            <h3>Spring Security</h3>
+            <ul>
+              <li><a href="./authentication.html">Authentication</a></li>
+              <li><a href="./authorization.html">Authorization</a></li>
+              <li><a href="./security_context.html">Security Context</a></li>
+              <li>
+                <a href="./security_filter_chain.html">Security Filter Chain</a>
+              </li>
+              <li>
+                <a href="./hashing_password_encoding.html"
+                  >Hashing and Password Encoding</a
+                >
+              </li>
+              <li>
+                <a href="./method_level_security.html">Method-Level Security</a>
+              </li>
+              <li><a href="./jwt.html">JSON Web Token (JWT)</a></li>
+              <li><a href="./oauth2.html">OAuth2</a></li>
+              <li><a href="./openid_connect.html">OpenID Connect</a></li>
+              <li><a href="./csrf_cors.html">CSRF and CORS</a></li>
+            </ul>
+          </div>
+
+          <!-- Category 9: Spring AOP -->
+          <div class="category-box">
+            <h3>Spring AOP</h3>
+            <ul>
+              <li>
+                <a href="./cross_cutting_concerns.html"
+                  >Cross-Cutting Concerns</a
+                >
+              </li>
+              <li><a href="./aspect.html">Aspect</a></li>
+              <li><a href="./advice_types.html">Advice and Advice Types</a></li>
+              <li>
+                <a href="./pointcut_expressions.html">Pointcut Expressions</a>
+              </li>
+              <li><a href="./aop_proxies.html">AOP Proxies</a></li>
+            </ul>
+          </div>
+
+          <!-- Category 10: Microservices -->
+          <div class="category-box">
+            <h3>Microservices</h3>
+            <ul>
+              <li>
+                <a href="./microservices_architecture.html"
+                  >Microservices Architecture</a
+                >
+              </li>
+              <li><a href="./spring_cloud.html">Spring Cloud</a></li>
+              <li><a href="./service_discovery.html">Service Discovery</a></li>
+              <li>
+                <a href="./api_gateway_load_balancing.html"
+                  >API Gateway and Load Balancing</a
+                >
+              </li>
+              <li>
+                <a href="./resiliency_patterns.html">Resiliency Patterns</a>
+              </li>
+              <li>
+                <a href="./distributed_configuration_tracing.html"
+                  >Distributed Configuration and Tracing</a
+                >
+              </li>
+              <li>
+                <a href="./distributed_transactions.html"
+                  >Distributed Transactions</a
+                >
+              </li>
+              <li><a href="./service_mesh.html">Service Mesh</a></li>
+            </ul>
+          </div>
+
+          <!-- Category 11: Event-Driven Architecture -->
+          <div class="category-box">
+            <h3>Event-Driven Architecture</h3>
+            <ul>
+              <li>
+                <a href="./event_driven_architecture.html"
+                  >Event-Driven Architecture Overview</a
+                >
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="call-to-action">
+          <h2>Ready to Start Learning?</h2>
+          <p>Explore | Learn | Grow</p>
+        </section>
+      </main>
+
+      <footer class="home-footer">
+        <p>&copy; 2024 Conversations Archive. All rights reserved.</p>
+      </footer>
+    </div>
+  </body>
+</html>
